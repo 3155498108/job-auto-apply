@@ -17,7 +17,8 @@ job-auto-apply/
 │   └── references/
 │       ├── platform-adapters.md        各平台现状 + 现成轮子清单 + 适配器接口
 │       ├── greeting-engine.md          证据原子模型 + 差异化量化验收
-│       └── safety-checklist.md         七道安全闸 + DOM 陷阱 + JD 劝退词表 + 上游踩坑六条
+│       ├── safety-checklist.md         七道安全闸 + DOM 陷阱 + JD 劝退词表 + 上游踩坑六条
+│       └── upstream-pitfalls.md        上游 34 条实战坑位全记录（改脚本/换平台时查）
 └── marvis/                          ← 自动化脚本工程（上游基座 + 本地演进）
     ├── SKILL.md                        上游原版 skill（v1，单平台）
     ├── references/                     上游文档，含 pitfalls.md（34 条实战坑位）

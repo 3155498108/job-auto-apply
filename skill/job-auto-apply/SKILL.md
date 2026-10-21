@@ -33,10 +33,14 @@ description: |
 
 ## 本机现状
 
+- **本 skill 的源码仓（私有）**：`https://github.com/3155498108/job-auto-apply`
+  （`skill/job-auto-apply/` 是本文件的来源，改动以仓库为准）
 - 简历与归档：`YOUR_HOME\`（`招聘\<岗位>\` 存 PDF/截图/话术三件套，
   `output\投递记录.md` 是总记录，`招聘\boss_manifest.json` 是机器可读清单）
 - 自动化工程：`YOUR_REPO\marvis\scripts\`（BOSS 全链路已跑通，
-  14 个岗位 14/14 送达、14/14 核对合格）
+  14 个岗位 14/14 送达、14/14 核对合格）。该目录的基座来自公开仓库
+  `taohuajianxian/boss-zhipin-assistant`，其 34 条实战坑位记录已收进
+  `references/upstream-pitfalls.md`，其中 6 条已提炼进 `references/safety-checklist.md`。
 - 浏览器操控走 Kimi WebBridge（`http://127.0.0.1:10086/command`），不是 Selenium/Playwright。
   同一个标签页不能并行跑两个自动化任务。
 
