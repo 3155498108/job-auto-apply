@@ -1,0 +1,15 @@
+# 统一以 LF 存进仓库，Windows 检出时再转 CRLF。
+# 否则同一文件在不同机器上 diff 会整片飘红。
+* text=auto eol=lf
+
+*.py    text eol=lf diff=python
+*.md    text eol=lf
+*.json  text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.txt   text eol=lf
+
+*.png   binary
+*.jpg   binary
+*.pdf   binary
+*.xlsx  binary

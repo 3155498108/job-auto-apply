@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 本机运行产物
+output/
+boss_work/
+*.log
+*.tmp
+state.json
+batch_state.json
+serial_progress.json
+surface_cache.json
+
+# 个人材料与凭证（不进代码仓）
+.env
+.env.*
+*.cookie
+cookies.txt
+resume*.pdf
+resume*.jpg
+jd-*.txt
+examples/
+
+# 编辑器
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# 上游作者的赞赏码等二进制资源不随本仓库分发
+assets/
