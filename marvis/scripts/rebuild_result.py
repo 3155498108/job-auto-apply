@@ -29,6 +29,9 @@ def main():
     prefix = sys.argv[1]
     finals = jload(os.path.join(WORK, f"{prefix}_final.json")) or []
     report = {r["label"]: r for r in (jload(os.path.join(WORK, f"{prefix}_msg_report.json")) or [])}
+    # 会话指纹判定（本轮真实新投 / 历史已投 / 未投出）
+    mt = {m["label"]: m for m in (jload(os.path.join(WORK, f"{prefix}_msgtime.json")) or [])
+          if isinstance(m, dict)}
     # 收集所有批次的 result（同 prefix 的 + 补投批次的），jobId → 最新状态
     latest = {}
     for fn in os.listdir(WORK):
@@ -53,7 +56,14 @@ def main():
         item = dict(label=t["label"], city=t.get("city", ""), company=t.get("company", ""),
                     jobId=jid, greeting_len=rep.get("main_len", 0),
                     lines=rep.get("main_len", 0) and 0 or 0)
-        if rec is None:
+        verdict = (mt.get(t["label"]) or {}).get("verdict")
+        if verdict == "this_batch":
+            item["status"] = "sent"
+        elif verdict == "older_batch":
+            item["status"] = "already_sent"
+        elif verdict == "no_my_msg":
+            item["status"] = "not_sent"
+        elif rec is None:
             item["status"] = "not_run"
         else:
             item["status"] = rec.get("status")

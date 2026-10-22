@@ -33,12 +33,12 @@ description: |
 
 ## 本机现状
 
-- **本 skill 的源码仓（私有）**：`https://github.com/3155498108/job-auto-apply`
+- **本 skill 的源码仓（公开）**：`https://github.com/3155498108/job-auto-apply`
   （`skill/job-auto-apply/` 是本文件的来源，改动以仓库为准）
 - 简历与归档：`YOUR_HOME\`（`招聘\<岗位>\` 存 PDF/截图/话术三件套，
   `output\投递记录.md` 是总记录，`招聘\boss_manifest.json` 是机器可读清单）
 - 自动化工程：`YOUR_REPO\marvis\scripts\`（BOSS 全链路已跑通，
-  14 个岗位 14/14 送达、14/14 核对合格）。该目录的基座来自公开仓库
+  累计 150 条 manifest 记录、173 个 jobId 幂等清单）。该目录的基座来自公开仓库
   `taohuajianxian/boss-zhipin-assistant`，其 34 条实战坑位记录已收进
   `references/upstream-pitfalls.md`，其中 6 条已提炼进 `references/safety-checklist.md`。
 - 浏览器操控走 Kimi WebBridge（`http://127.0.0.1:10086/command`），不是 Selenium/Playwright。
@@ -198,14 +198,34 @@ REQ_MARKS  = ("任职要求", "岗位要求", "职位要求", "任职资格", "�
 
 核对脚本复用 `wb_fav_check.py`（`BOSS_TARGETS_FILE` / `BOSS_PREFIX` 切换清单）。
 
+**核对只能证明「会话里有话术」，不能证明「这一轮投的」。** 同一岗位可能几天前就投过，
+核对会把它算成送达。要区分三态，用话术指纹比对（`wb_msg_time.py`）：
+
+| 判定 | 依据 | 处理 |
+|---|---|---|
+| `this_batch` 本轮新投 | 会话内我方消息包含**本批生成的话术指纹** | 写 manifest |
+| `older_batch` 历史已投 | 会话里我方消息是旧话术，本批指纹不在 | 不重复写，只补 jobId |
+| `no_my_msg` 没投出去 | 会话不存在，或会话里没有我方消息 | 不写 manifest，进遗留清单 |
+
+指纹提取要点：话术归档文件开头是元信息（公司/地址/薪资/`【主推版 · 按 JD 定制 · N 字】`），
+真正发出去的是该标记之后的正文，取标记后的内容再归一化（去掉 markdown 的 `*`、换行变空格）。
+**同一 HR 的多个岗位共用一个会话**时，该会话里可能同时躺着本批多条话术，
+所以要比对整个会话的我方消息集合，不能只看最后一条。
+
 ### 7. 写回记录
 
 - `output\投递记录.md` 追加一节：这一轮扫了什么、筛掉了什么（附 JD 原文关键词）、
   用了什么话术策略、投递明细表、核对结论、遗留待办。
 - `招聘\boss_manifest.json` 追加条目（`folder` / `company` / `title` / `salary` / `city` /
   `jobId` / `greeting_file` / `pdf` / `note`）。note 里写清这批用了哪种话术策略。
-- 新建归档文件夹时加平台/批次前缀（`跨城-` / `收藏-` / `广东-` / `广东2-`），
-  避免 `pick_by_company()` 按公司名前缀匹配时串到别的批次。
+- 写回用 `writeback_b3.py`（`B3_PREFIX` / `B3_APPENDIX` / `B3_TITLE` / `B3_SCAN` 参数化，
+  可多批次依次执行）。它按三态分流：`sent` 新增条目；`already_sent` 遇到 manifest 里
+  同公司同岗位的条目就**只补 jobId**（防未来重投），不新增；`not_sent` 不写 manifest，
+  只进遗留清单——写进去会污染幂等清单，导致这个岗位永远投不出去。
+- **manifest 里出现同公司同岗位但缺 `jobId` 的条目，就是漏记**：
+  写回时用本批 jobId 补上，否则这个岗位会被重复投递。
+- 新建归档文件夹时加平台/批次前缀（`跨城-` / `收藏-` / `广东-` / `广东2-` /
+  `广东3-` / `收藏AI-`），避免 `pick_by_company()` 按公司名前缀匹配时串到别的批次。
 
 ## Output contract
 
