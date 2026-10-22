@@ -17,6 +17,7 @@ import json
 import os
 import sys
 import time
+import difflib
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -95,6 +96,58 @@ def norm(s):
     return "".join((s or "").split())
 
 
+def applied_job_ids():
+    """已投 jobId 集合：manifest + 各批 result.json。
+
+    只靠 DOM 判断幂等会误判：**同一个 HR 的多个岗位共用一个会话**，
+    对该 HR 的第 2 个岗位发话术时，会话里已经有第 1 个岗位的「候选人」话术，
+    于是被当成「已发」跳过——整批会静默漏投。
+    第三个实测：示例文旅W三个 AI 全栈岗都是同一个人（候选人A女士），
+    三个里有几个就是这样被跳过的。
+
+    所以 DOM 命中只作为「这个岗位确实投过」的旁证，
+    真正的判定依据是 jobId 是否在已投清单里。
+    """
+    ids = set()
+    try:
+        with open(r"YOUR_HOME\招聘\boss_manifest.json", encoding="utf-8") as f:
+            m = json.load(f)
+        for j in m.get("boss_jobs", []):
+            if j.get("jobId"):
+                ids.add(j["jobId"])
+    except Exception as e:
+        print(f"  (manifest 读取失败：{e})")
+    try:
+        for fn in os.listdir(WORK):
+            if not fn.endswith("_result.json"):
+                continue
+            try:
+                with open(os.path.join(WORK, fn), encoding="utf-8") as f:
+                    rows = json.load(f)
+            except Exception:
+                continue
+            for r in rows if isinstance(rows, list) else []:
+                if isinstance(r, dict) and r.get("jobId"):
+                    ids.add(r["jobId"])
+    except Exception as e:
+        print(f"  (result.json 扫描失败：{e})")
+    return ids
+
+
+def name_sim(a, b):
+    """岗位名相似度：详情页名 vs 列表页名。
+
+    不能直接判「包含」——列表页标题常带薪资尾巴（「java实习生200元/天」），
+    详情页又没有（「java实习生」）。用相似度比包含更稳。
+    """
+    na, nb = norm(a), norm(b)
+    if not na or not nb:
+        return 0.0
+    if na in nb or nb in na:
+        return 1.0
+    return difflib.SequenceMatcher(None, na.lower(), nb.lower()).ratio()
+
+
 def wait_send_enabled(timeout=12):
     """等发送按钮从 disabled 变成可用。
 
@@ -119,6 +172,10 @@ def main():
     targets = json.load(open(os.path.join(WORK, TARGETS_FILE), encoding="utf-8"))
     index = load_index()
     results = []
+    navigated = 0
+    applied = applied_job_ids()
+    out = os.path.join(WORK, f"{PREFIX}_result.json")
+    log(f"已投 jobId {len(applied)} 个（用于精确幂等）")
     for t in targets:
         if only and t["label"] not in only:
             continue
@@ -155,6 +212,30 @@ def main():
         except Exception:
             d = {}
         log(f"    岗位 {d.get('name')} | {d.get('salary')} | {d.get('area')} | 公司 {d.get('comp')}")
+        # 安全阀 2：详情页岗位名必须与目标岗位对得上。
+        # Vue Router 缓存劫持时，URL 是 C 的 jobId、页面还渲染 B 的内容，
+        # 这时点「立即沟通」就等于给 B 投了话术。
+        sim = name_sim(d.get("name", ""), t.get("position", ""))
+        if sim < 0.4:
+            log(f"    !! 详情页岗位名不匹配（页面={d.get('name','')!r} 目标={t.get('position','')!r} "
+                f"sim={sim:.2f}），重置搜索页后重试一次")
+            navigate("https://www.zhipin.com/web/geek/job")
+            time.sleep(3.0)
+            navigate(f"https://www.zhipin.com/job_detail/{t['jobId']}.html")
+            time.sleep(6.0)
+            d2 = evaluate(DETAIL)
+            try:
+                d2 = json.loads(d2) if isinstance(d2, str) else d2
+            except Exception:
+                d2 = {}
+            sim2 = name_sim(d2.get("name", ""), t.get("position", ""))
+            if sim2 < 0.4:
+                log(f"    !! 重试后仍不匹配（sim={sim2:.2f}），跳过")
+                results.append(dict(label=t["label"], status="detail_mismatch",
+                                    page_name=d2.get("name", ""), sim=round(sim2, 3)))
+                continue
+            d = d2
+            log(f"    重试成功 岗位 {d.get('name')} sim={sim2:.2f}")
         if not D.wait_text(["立即沟通", "继续沟通"], timeout=20):
             # 详情页偶发白屏/卡住 → reload 一次再等
             log("    (详情页未就绪，reload 重试)")
@@ -210,9 +291,12 @@ def main():
             hit = -1
         log(f"    已发话术计数 {hit}")
         if hit > 0:
-            log("    !! 已有定制话术，跳过")
-            results.append(dict(label=t["label"], status="already_sent"))
-            continue
+            # 会话里已有候选人的话术 —— 要分清是「这个岗位投过」还是「同一 HR 的别的岗位投过」
+            if t["jobId"] in applied:
+                log(f"    !! 该岗位已投过（jobId 命中已投清单），跳过")
+                results.append(dict(label=t["label"], status="already_sent", jobId=t["jobId"]))
+                continue
+            log("    (会话里有本 HR 其它岗位的话术，本岗位未投过 → 继续)")
 
         # 5) 填 + 发
         f = D.fill_chat(text)
@@ -256,10 +340,13 @@ def main():
                             status="sent" if sent_ok else "send_unverified",
                             greeting_len=len(text), lines=text.count("\n") + 1,
                             jobId=t["jobId"]))
+        applied.add(t["jobId"])
         log(f"    → {'成功' if sent_ok else '待核实'}")
+        # 实时落盘：中断最多丢当前一条
+        with open(out, "w", encoding="utf-8") as f:
+            json.dump(results, f, ensure_ascii=False, indent=1)
         time.sleep(6)
 
-    out = os.path.join(WORK, f"{PREFIX}_result.json")
     with open(out, "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=1)
     log("=== 完成 ===")

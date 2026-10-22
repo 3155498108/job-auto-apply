@@ -157,7 +157,8 @@ ATOMS = [
          text="RAG / 向量检索、React、Vue 这些我没在项目里实打实用过，来了可以现学，但我不把没做过的说成做过。"),
 ]
 
-# ── 开头句（10 种，按序号轮换）────────────────────────────────────────
+# ── 开头句（20 种，按序号轮换）──────────────────────────────────────
+# 池子必须 ≥ 批次大小，否则「开头句去重 = 批次大小」这条验收线不可能达标
 OPENERS = [
     "您好，我是计算机 本科生候选人，看到贵司「{pos}」这个岗位比较对口，冒昧打扰一下。",
     "您好！我是计算机专业 在校的候选人，刷到贵司在招「{pos}」，我把手上的项目对了一遍你们的要求，有几条正好对得上。",
@@ -169,14 +170,28 @@ OPENERS = [
     "你好，我是候选人，在校计算机。注意到贵司在招「{pos}」，简单说下我的项目情况和能给到的价值。",
     "您好，我是计算机专业 在校的候选人。贵司「{pos}」的招聘我看到了，先把最能对上要求的几段经历摆出来。",
     "你好呀，我是候选人，计算机 在校。顺着「{pos}」点进来的，想跟您说说我的项目，看看合不合适。",
+    "您好，我是候选人，在校计算机本科生。看了贵司「{pos}」的岗位介绍后，觉得自己的项目能对上其中几条，说明如下。",
+    "你好，我叫候选人（计算机专业 在校）。贵司「{pos}」我认真读过，冒昧来说明我能接上的部分。",
+    "候选人，在校，计算机专业。投递「{pos}」，附上我能对得上要求的几段项目经历。",
+    "您好，冒昧打扰。我是计算机专业 在校的候选人，看到「{pos}」这个岗位的要求后，觉得有几条正好是我做过的。",
+    "你好呀，我是候选人。贵司「{pos}」在招人，我把手上的项目对了一遍要求，挑能对上的几条说给您听。",
+    "您好！我是候选人，计算机 在校。冲着「{pos}」来的，先说我做过什么、您看合不合适。",
+    "您好，我是计算机专业 在校的候选人。「{pos}」这个岗位我投了，下面几段是我能直接对上要求的内容。",
+    "你好，我是候选人，在校计算机专业本科生。看到贵司「{pos}」，想具体说下我手上的项目。",
+    "候选人，在校，计算机。「{pos}」的要求我逐条看过，下面写我能对上的部分。",
+    "您好，我叫候选人（计算机专业 在校）。投递贵司「{pos}」，把我做过的东西摆出来，您看是否合适。",
 ]
 
-# ── JD 点名句（4 种）──────────────────────────────────────────────────
+# ── JD 点名句（8 种）──────────────────────────────────────────────────
 ECHOES = [
     "贵司 JD 里提到的「{kw}」，正好是我实际做过的部分。",
     "看到 JD 里写着「{kw}」，我第一时间想到的就是这个。",
     "JD 里「{kw}」这一条我做过对应的实现，下面是细节。",
     "先说和 JD 里「{kw}」直接对得上的地方。",
+    "贵司要求里「{kw}」这一项，我做过对应的，下面展开讲。",
+    "JD 中提到的「{kw}」，我这边有可以直接对照的实践。",
+    "「{kw}」这条我正好做过，具体做法写在下面。",
+    "先从 JD 里「{kw}」这一条说起。",
 ]
 
 # JD 里没有足够具体的词可点名时，用这几句
@@ -187,7 +202,16 @@ ECHOES_FALLBACK = [
     "先说我实际做过什么。",
 ]
 
-# ── 结尾句（6 种）────────────────────────────────────────────────────
+# 命中「能力边界」原子时不能用「我做过」句式，否则与正文自相矛盾
+ECHOES_BOUNDARY = [
+    "先说明一点：JD 里的「{kw}」我没在项目里实打实用过，这话我得讲在前面。",
+    "「{kw}」这条我确实没做过，不敢含糊其辞，下面只说我真正做过的部分。",
+    "贵司提到的「{kw}」我没有相关实践，可以现学，但我不把没做过的说成做过。",
+    "先坦白：「{kw}」我没碰过。下面写的都是我有把握的部分。",
+]
+BOUNDARY_ATOMS = ("ai_notrain", "gen_boundary")
+
+# ── 结尾句（10 种）────────────────────────────────────────────────────
 ENDINGS = [
     "每周可实习 5 天，时间可协商。方便发份 JD 吗？",
     "我每周能到岗 5 天，可以连着做 数月以上，方便的话把详细 JD 发我看看？",
@@ -195,6 +219,10 @@ ENDINGS = [
     "到岗时间可实习，可以实习 数月以上；方便的话把 JD 和团队情况发我一下？",
     "我每周可实习 5 天，长期做（数月以上）没问题，方便聊聊具体职责吗？",
     "可实习、时间可协商，简历已经附上了，后续想聊哪部分都可以。",
+    "每周可实习 5 天，时间可协商。岗位还有其它要求的话，欢迎直接问我。",
+    "我每周能到岗 5 天，可以连着做 数月以上，方便的话聊聊团队现在的技术栈？",
+    "可实习、能做 数月以上没问题，简历已附上，后续想深入哪部分都可以聊。",
+    "到岗时间可实习，实习 数月以上没问题。想先了解具体职责和技术选型吗？",
 ]
 
 # ── 精简版开头 / 结尾 ────────────────────────────────────────────────
@@ -367,23 +395,38 @@ def pick_echo_kw(atom, hits, jd_low):
     return None
 
 
-def build_main(target, jd, idx):
-    """生成主推版正文（多行）。"""
+def build_main(target, jd, idx, avoid_lead=None):
+    """生成主推版正文（多行）。
+
+    avoid_lead：同一公司前面已经用过的 lead 原子 id。
+    同一批里同一个 HR 挂了多个岗位时（如「示例文旅W」三个 AI 全栈岗都是同一个人），
+    如果证据组合撞车，HR 会收到几条几乎一样的招呼话——直接看着像群发。
+    所以把已用过的 lead 原子压到最后，逼它换一个证据组合。
+    """
     jd_low = jd.lower()
     atoms = match_atoms(jd, target.get("position", ""))
+    if avoid_lead:
+        atoms = sorted(atoms, key=lambda x: (x[0]["id"] == avoid_lead, -x[1]))
     if not atoms:
         atoms = [(a, 1, [(a["kws"][0], 1.0)]) for a in ATOMS if a["id"] in
                  ("can_stack", "gen_collab", "gen_full", "game_fe")]
 
     tier = TIERS[idx % len(TIERS)]
     opener = OPENERS[idx % len(OPENERS)]
-    ending = ENDINGS[(idx * 5 + 2) % len(ENDINGS)]
+    # 步长必须与池长互质，否则只能轮转到池子的一部分
+    ending = ENDINGS[(idx * 3 + 2) % len(ENDINGS)]
 
     # 「JD 点名句」用得分最高的原子
     lead = atoms[0]
     echo_kw = pick_echo_kw(lead[0], lead[2], jd_low)
-    echo = (ECHOES[idx % len(ECHOES)].replace("{kw}", echo_kw) if echo_kw
-            else ECHOES_FALLBACK[idx % len(ECHOES_FALLBACK)])
+    if lead[0]["id"] in BOUNDARY_ATOMS:
+        # 能力边界：不能说「我做过」
+        echo = (ECHOES_BOUNDARY[idx % len(ECHOES_BOUNDARY)].replace("{kw}", echo_kw)
+                if echo_kw else ECHOES_BOUNDARY[idx % len(ECHOES_BOUNDARY)].replace("{kw}", "这块技术"))
+    elif echo_kw:
+        echo = ECHOES[idx % len(ECHOES)].replace("{kw}", echo_kw)
+    else:
+        echo = ECHOES_FALLBACK[idx % len(ECHOES_FALLBACK)]
 
     lines = [opener.replace("{pos}", target.get("position", "")), echo]
 
@@ -468,13 +511,20 @@ def main():
 
     out = []
     missing = []
+    company_lead = {}      # 公司 → 该公司前面已用过的 lead 原子（同 HR 多岗位去撞车）
+    company_n = Counter()  # 公司 → 已生成份数
     for i, t in enumerate(targets):
         jd = (jds.get(t["label"]) or {}).get("jd", "")
         if len(jd) < 120:
             missing.append(t["label"])
             continue
-        main_txt, used, atom_ids = build_main(t, jd, i)
+        comp = t.get("company", "")
+        avoid = company_lead.get(comp)
+        main_txt, used, atom_ids = build_main(t, jd, i, avoid)
         short_txt = build_short(t, jd, i)
+        if atom_ids:
+            company_lead.setdefault(comp, atom_ids[0])
+        company_n[comp] += 1
         try:
             check_body(main_txt)
             check_body(short_txt)
@@ -514,7 +564,7 @@ def main():
 - 命中关键词：{'、'.join(kws) if kws else '（无，回退到通用项目）'}
 - 采用证据原子：{'、'.join(atom_ids)}
 - 长度档：{TIERS[i % len(TIERS)]} 字档（轮换）
-- 开头句式 #{i % len(OPENERS) + 1} / 结束句式 #{(i * 5 + 2) % len(ENDINGS) + 1}
+- 开头句式 #{i % len(OPENERS) + 1} / 结束句式 #{(i * 3 + 2) % len(ENDINGS) + 1}
 - 简历图组：{src_pdf}
 - GitHub：https://github.com/3155498108（若干个公开仓库 / 多次提交，2026-10-21 实测）
 
@@ -531,10 +581,12 @@ def main():
                         position=t["position"], city=t["city"], salary=t["salary"],
                         main_len=len(main_txt), short_len=len(short_txt),
                         atoms=atom_ids, opener=i % len(OPENERS), tier=TIERS[i % len(TIERS)],
-                        jd_len=len(jd), kws=kws))
+                        jd_len=len(jd), kws=kws, pdf=src_pdf, imgs=imgs,
+                        aicoding_hits=aic, company_seq=company_n[comp]))
         print(f"  {len(main_txt):>3}字 {folder[:44]:<46} 原子 {'/'.join(atom_ids) or '-'}")
 
-    with io.open(os.path.join(WORK, "gd2_msg_report.json"), "w", encoding="utf-8") as f:
+    report_name = os.environ.get("GD2_REPORT", "gd2_msg_report.json")
+    with io.open(os.path.join(WORK, report_name), "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=1)
     # 投递用最终清单（wb_cross.py 读 BOSS_TARGETS_FILE）
     final_name = os.environ.get("GD2_FINAL", "gd2_final.json")

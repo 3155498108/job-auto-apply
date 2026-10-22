@@ -88,17 +88,33 @@ def norm(s):
     return re.sub(r"[\s（）()【】\[\]，,、/·\-—:：~～]", "", (s or "")).lower()
 
 
+def pos_match(page_pos, want_pos):
+    """岗位名对位：允许前后缀差异。
+
+    页面写「兼职·软件开发实习生」、扫描时是「软件开发实习生」——同一个岗位，
+    只作备注不算失败。严格相等会误判成不合格。
+    """
+    a, b = norm(page_pos), norm(want_pos)
+    if not a or not b:
+        return False
+    return a == b or a in b or b in a
+
+
 def main():
     targets = json.load(open(os.path.join(WORK, TARGETS_FILE), encoding="utf-8"))
     open_chat()
     # boss 名（用于更准地选会话）
     boss = {}
-    try:
-        favs = json.load(open(os.path.join(WORK, "favorites_fresh.json"), encoding="utf-8"))
+    for fn in ("favorites_tag4.json", "favorites_fresh.json"):
+        try:
+            favs = json.load(open(os.path.join(WORK, fn), encoding="utf-8"))
+        except OSError:
+            continue
         for f in favs:
-            boss[f.get("encryptJobId")] = f.get("bossName") or ""
-    except OSError:
-        pass
+            if isinstance(f, dict) and f.get("encryptJobId"):
+                boss[f["encryptJobId"]] = f.get("bossName") or ""
+        if boss:
+            break
 
     rows = []
     for t in targets:
@@ -131,7 +147,7 @@ def main():
                     v = json.loads(v)
                 except Exception:
                     v = {"err": v}
-            if np_ and norm(v.get("pos", "")) == np_:
+            if np_ and pos_match(v.get("pos", ""), np_):
                 picked = (c, v)
                 break
         if not picked:
@@ -155,7 +171,7 @@ def main():
         v["boss"] = bname
         rows.append(v)
         ok = (v.get("myText", 0) >= 1 and v.get("images", 0) >= 2
-              and v.get("brs", 0) >= 1 and norm(v.get("pos", "")) == np_)
+              and v.get("brs", 0) >= 1 and pos_match(v.get("pos", ""), np_))
         v["ok"] = ok
         log(f"{'✓' if ok else '✗'} {t.get('city',''):<4} {comp[:12]:<13} 话术{v.get('myText')} "
             f"br={v.get('brs')} 图{v.get('images')} 岗位={str(v.get('pos'))[:22]} "
