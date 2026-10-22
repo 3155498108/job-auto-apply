@@ -78,7 +78,21 @@ def main():
     mt_by_label = {m.get("label"): m for m in mtime if isinstance(m, dict)}
 
     def status_of(label, t=None):
-        """三态判定。优先级：会话指纹 > manifest 历史条目 > result 文件。"""
+        """三态判定。
+
+        优先级：**result 文件 > 会话指纹 > manifest 历史条目**。
+
+        为什么 result 排在指纹前面：
+        混合批（本轮只新投其中一两个岗位，其余上一轮就投过）里，
+        归档话术文件里存的就是上一轮实际发出去的那份内容，
+        指纹当然匹配 → 会把 19 个旧岗位全判成 this_batch，
+        写回时当成「本轮新投」重复记进 manifest。
+        result 文件是本轮投递脚本的实时输出，
+        `already_sent` = 本轮命中幂等被跳过，是最权威的判据。
+        """
+        st = (res_by_label.get(label) or {}).get("status")
+        if st in ("already_sent", "already", "skipped_idempotent"):
+            return "already_sent"
         v = (mt_by_label.get(label) or {}).get("verdict")
         if v == "this_batch":
             return "sent"
@@ -92,11 +106,8 @@ def main():
                     return "already_sent"
         if v == "no_my_msg":
             return "not_sent"
-        st = (res_by_label.get(label) or {}).get("status")
         if st == "sent":
             return "sent"
-        if st in ("already_sent", "already"):
-            return "already_sent"
         return "not_sent"
 
     # ── 1) manifest ────────────────────────────────────────────────

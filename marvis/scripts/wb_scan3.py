@@ -67,7 +67,10 @@ def load_done():
     for fn in os.listdir(WORK):
         if not fn.endswith(".json"):
             continue
-        if not re.search(r"targets|final|result|kept|check", fn):
+        # 只认「真的投出去了」的记录：投递结果 / 会话核对。
+        # 旧口径把 targets/final/kept 也算进来 → 选好但还没投的岗位被当成已投，
+        # 同一批重复跑选岗会把它们全部误排除（实测 AI 批第二次跑池子从 44 掉到 22）。
+        if not re.search(r"result|check", fn):
             continue
         try:
             data = json.load(io.open(os.path.join(WORK, fn), encoding="utf-8"))

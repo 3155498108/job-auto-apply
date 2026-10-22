@@ -69,7 +69,9 @@ ATOMS = [
     dict(id="ai_api", kws=["llm", "大模型", "agent", "智能体", "ai", "aigc", "spring ai", "deepseek",
                            "gpt", "提示词", "prompt", "问答", "对话", "chat", "生成", "多模态"],
          labels=["AI 落地", "大模型接入", "智能体应用"],
-         echo=["大模型", "Agent", "Spring AI", "DeepSeek", "提示词"],
+         # 只放我真在项目里写过的东西。「提示词」不放：我写过提示词模板，
+         # 但没做过提示词调优/优化，点名这个词会被理解成后者。
+         echo=["大模型", "Agent", "Spring AI", "DeepSeek", "多轮对话"],
          text="小组负责人，做 Spring AI + DeepSeek 某 AI 客服：把大模型接成 5 个 RESTful 端点，CompletableFuture 异步调用 + 30 秒超时 + 持久化异常隔离，单次响应 1–3 秒、数据库写入 < 50 毫秒。"),
     dict(id="ai_ctx", kws=["上下文", "context", "会话", "多轮", "session", "记忆", "用户画像"],
          labels=["会话上下文", "多轮对话"],
@@ -157,6 +159,140 @@ ATOMS = [
          text="RAG / 向量检索、React、Vue 这些我没在项目里实打实用过，来了可以现学，但我不把没做过的说成做过。"),
 ]
 
+# ── 同一原子的多种真实表述 ───────────────────────────────────────────
+# 同一批里好几个岗位会用同一组证据原子（py_web + ai_api 尤其集中）。
+# 证据一样、但每句话都一字不差，HR 并排看两条就知道是群发模板。
+# 所以给高频原子准备几种**等价但不同措辞**的写法，按批次内使用次数轮换。
+#
+# ⚠ 硬约束：变体只能换措辞，不能换事实。
+#   · 数字必须与已核验事实完全一致（18 Controller / 70 RESTful / 5 端点 /
+#     30 秒超时 / 1–3 秒 / < 50 毫秒 / 11 张表 / 某网页小游戏合集 / 两百余个 TS 文件 /
+#     数万行 / 数十个测试文件 / 若干个公开仓库 …）
+#   · 不能出现原表述里没有的新技术、新项目、新指标
+#   · 每条变体都要能被简历/仓库佐证
+ATOM_TEXT_VARIANTS = {
+    "ai_api": [
+        "小组负责人，做 Spring AI + DeepSeek 某 AI 客服：把大模型接成 5 个 RESTful 端点，CompletableFuture 异步调用 + 30 秒超时 + 持久化异常隔离，单次响应 1–3 秒、数据库写入 < 50 毫秒。",
+        "带 5 人小组做 Spring AI + DeepSeek 某 AI 客服，按表现 / 控制 / 业务 / 数据 / AI 五层接入大模型，对外 5 个 RESTful 端点；调用走 CompletableFuture 异步，配 30 秒超时与持久化异常隔离，AI 响应稳定在 1–3 秒、入库 < 50 毫秒。",
+        "担任 小组负责人，用 Spring AI 把 DeepSeek 接成某 AI 客服，5 个 RESTful 端点对外可用；大模型调用用 CompletableFuture 异步 + 30 秒超时，聊天记录入库失败只记日志、不影响主流程，响应 1–3 秒、写入 < 50 毫秒。",
+    ],
+    "py_web": [
+        "用 Python + Flask + Pillow + MoviePy 独立做出长卷轴滚动视频生成器，后端提供创建 / 列表 / 详情 / 下载 / 删除五类接口，前端 Bootstrap 5 + 原生 JS 支持拖拽批量上传与进度轮询。",
+        "独立用 Python + Flask 做出长卷轴滚动视频生成器，配 Pillow 做图像处理、MoviePy 做视频合成；后端给创建 / 列表 / 详情 / 下载 / 删除五类接口，前端 Bootstrap 5 + 原生 JS，支持拖拽批量上传和进度轮询。",
+        "Python 侧用 Flask + Pillow + MoviePy 写了长卷轴滚动视频生成器，服务端拆成创建 / 列表 / 详情 / 下载 / 删除五个接口，页面用 Bootstrap 5 + 原生 JS 做拖拽批量上传与进度轮询。",
+    ],
+    "gen_aicode": [
+        "日常用 Claude Code / Codex 协作开发，AI 只做候选试算、规则始终是唯一真相源，生成的代码我自己审、问题自己跟。",
+        "写代码基本靠 Claude Code / Codex 协作，但 AI 只负责给候选方案，规则由我定、产出由我审，出了问题自己兜。",
+        "日常用 Claude Code / Codex 写代码：我把规则和边界先定死，AI 只做候选试算，生成结果逐行审，逻辑我自己跟。",
+    ],
+    "gen_full": [
+        "前后端能独立闭环：从数据库表设计、接口实现到页面交互和本地部署都自己跑通一遍。",
+        "一个人能把前后端闭环：表设计、接口实现、页面交互到本地部署，全部自己跑通。",
+        "从建表写接口，到页面交互和本地部署，都是我一个人做完并跑通的。",
+    ],
+    "game_fe": [
+        "用 TypeScript + Canvas 写渲染与交互，同一套状态机同时驱动手机与桌面端，不依赖框架也能把操作手感做细。",
+        "前端用 TypeScript + Canvas 实现渲染和交互，一套状态机同时跑手机和桌面浏览器，不依赖框架也把操作手感调到位。",
+        "渲染与交互部分用 TypeScript + Canvas 写，同一份状态机适配手机与桌面端，脱离框架也能把手感做细。",
+    ],
+    "can_stack": [
+        "独立完成「某电商交易后端」电商后端：Spring Boot + MyBatis + MySQL + Redis，18 个 Controller、70 个 RESTful 接口，按 Controller / Service / Mapper 分层。",
+        "「某电商交易后端」电商后端是我一个人做完的：Spring Boot + MyBatis + MySQL + Redis，分 Controller / Service / Mapper 三层，共 18 个 Controller、70 个 RESTful 接口。",
+        "用 Spring Boot + MyBatis + MySQL + Redis 独立做出「某电商交易后端」电商后端，按 Controller / Service / Mapper 分层，18 个 Controller 对应 70 个 RESTful 接口。",
+    ],
+    "can_sql": [
+        "11 张业务表（菜品 / 订单 / 订单明细 / 购物车 / 地址簿等）自己设计，查询走索引、SQL 全部用 `#{}` 占位防注入，MyBatis 拦截器统一做分页与字段脱敏。",
+        "菜品 / 订单 / 订单明细 / 购物车 / 地址簿等 11 张表由我自己设计，查询走索引，SQL 全部 `#{}` 占位防注入，分页和字段脱敏交给 MyBatis 拦截器统一处理。",
+        "数据库这块：11 张业务表自己设计（菜品 / 订单 / 购物车等），查询用索引，SQL 一律用 `#{}` 占位防注入，分页与脱敏由 MyBatis 拦截器统一做。",
+    ],
+    "py_doc": [
+        "另做过 Python + Jinja2 的简历生成工具：解析岗位 JD、算关键词覆盖率、改写后再渲染成 PDF，内置 15 套 A4 版式主题。",
+        "还做过一个 Python + Jinja2 的简历生成工具：先把岗位 JD 解析出来算关键词覆盖率，再改写内容渲染成 PDF，内置 15 套 A4 版式主题。",
+        "另外有套 Python + Jinja2 的简历工具：解析 JD → 算关键词覆盖率 → 改写 → 渲染 PDF，配 15 套 A4 版式主题。",
+    ],
+    "game_arch": [
+        "内核按「站点壳 / 游戏内核 / 渲染层」三层拆开，内核零运行时依赖，状态用不可变对象 + 纯函数 reducer 表达，改一处不会牵动全局。",
+        "游戏内核拆成站点壳 / 游戏内核 / 渲染层三层，内核本身零运行时依赖，状态用不可变对象和纯函数 reducer 表达，改一处不会牵动全局。",
+        "架构上把站点壳、游戏内核、渲染层分开，内核不依赖运行时，状态靠不可变对象 + 纯函数 reducer，改动不会牵一发动全身。",
+    ],
+    "ai_ctx": [
+        "用 sessionId 隔离不同用户的会话并保留 5 轮上下文，让多轮追问能接上前面的信息，而不是每次都从零开始。",
+        "每个用户用 sessionId 隔开自己的会话，保留 5 轮上下文，多轮追问能接上前面说过的话，不用每次从头讲。",
+        "会话用 sessionId 做隔离，保留最近 5 轮上下文，所以追问时能接上前面聊过什么，而不是每次从零开始。",
+    ],
+    "ai_stable": [
+        "上线后累计修复 6 类问题（超时、串话、输出截断、敏感内容、并发写入等），把大模型的不稳定挡在业务层之外。",
+        "上线后修了 6 类问题——超时、串话、输出截断、敏感内容、并发写入这些，大模型的不稳定我都在业务层挡住了。",
+        "上线后陆续修掉 6 类问题：超时、串话、输出截断、敏感内容、并发写入等，目标是让大模型的不稳定碰不到主流程。",
+    ],
+    "gen_deploy": [
+        "自己配过 Flask 服务的进程管理与 HTTP 接口暴露，本地跑通前后端并部署上线验证过。",
+        "Flask 服务的进程管理和 HTTP 接口暴露我自己配过，前后端在本地跑通后部署上线验证过一遍。",
+        "部署这块我独立完成：配好 Flask 服务的进程管理与 HTTP 接口暴露，本地跑通前后端再部署上线验证。",
+    ],
+    "game_scale": [
+        "独立开发 数十款纯静态网页小游戏，同一套代码适配手机与桌面浏览器：游戏内核是纯 TypeScript 状态机，两百余个 TS 文件 / 数万行。",
+        "数十款纯静态网页小游戏是我独立写的，同一套代码适配手机和桌面浏览器；内核是纯 TypeScript 状态机，两百余个 TS 文件 / 数万行。",
+        "一个人写出 数十款纯静态网页小游戏，代码一套通吃手机与桌面浏览器；内核用纯 TypeScript 状态机实现，两百余个 TS 文件 / 数万行。",
+    ],
+    "game_test": [
+        "用不可变状态与纯函数换可测试、可复现、可回放，随机数用可播种的 mulberry32，每款游戏配 Vitest 单测（共 数十个测试文件）。",
+        "状态不可变 + 纯函数，换来的是可测试、可复现、可回放；随机数用可播种的 mulberry32，每款游戏配 Vitest 单测，共 数十个测试文件。",
+        "为了让逻辑可测，我把状态做成不可变对象、随机数换成可播种的 mulberry32，每款游戏配 Vitest 单测，一共 数十个测试文件。",
+    ],
+    "can_cache": [
+        "Redis 缓存菜品与令牌、Session 共享登录态，用分布式锁防超卖，把并发下单的重复写入挡在业务层之前。",
+        "菜品和令牌走 Redis 缓存，登录态用 Session 共享，并发下单靠分布式锁防超卖，重复写入挡在业务层之前。",
+        "缓存这块用 Redis 存菜品和令牌，Session 共享登录态，超卖问题用分布式锁解决，重复写不进业务层。",
+    ],
+    "can_layer": [
+        "后端按 Controller / Service / Mapper 分层，18 个 Controller 对应 70 个 RESTful 接口，接口统一返回包装结构，方便前端按同一套约定接。",
+        "后端分 Controller / Service / Mapper 三层，18 个 Controller 对应 70 个 RESTful 接口，返回结构统一包装，前端按同一套约定接。",
+        "分层是 Controller / Service / Mapper，18 个 Controller 对应 70 个 RESTful 接口；返回结构统一，前端对接时不用各写一套。",
+    ],
+    "can_debug": [
+        "写接口时靠日志和断点逐个排查参数绑定、事务回滚和缓存一致性问题，踩过的坑都记成文档交给组里复用。",
+        "写接口遇到问题，我就靠日志和断点逐个排查参数绑定、事务回滚、缓存一致性这些，踩过的坑整理成文档给组里复用。",
+        "参数绑定、事务回滚、缓存不一致这类问题，我是靠日志加断点一个个定位的，排查过程都写成文档留给组里复用。",
+    ],
+    "py_data": [
+        "用 PyQt6 桌面端 + Node.js 客户端做过批量歌单抓取与多级排序，针对命令行单次只能取 200 首的限制，自己搭了一套分批抓取 + 结果合并的分析方案。",
+        "批量歌单抓取和分级排序这块，我用 PyQt6 桌面端配 Node.js 客户端做的；命令行一次只能取 200 首，所以自己搭了分批抓取再合并结果的分析流程。",
+        "做过一套 PyQt6 桌面端 + Node.js 客户端的批量歌单抓取与多级排序，绕开命令行单次 200 首的限制，用分批抓取加结果合并来完成。",
+    ],
+    "gen_github": [
+        "代表项目都放在 GitHub（github.com/3155498108），若干个公开仓库、多次提交，README 里写清了做法和取舍，可以直接看。",
+        "项目都开源在 GitHub（github.com/3155498108），若干个公开仓库、多次提交，README 里把做法和取舍写清楚了，可以直接点进去看。",
+        "代表作都在 GitHub 上（github.com/3155498108）：若干个公开仓库、多次提交，每个仓库的 README 都写了实现思路和取舍。",
+    ],
+    "data_model": [
+        "数据库这块自己设计过 11 张业务表并做索引与联表查询优化，熟悉从表结构到慢查询定位这一整套流程。",
+        "数据库方面：11 张业务表自己设计过，索引和联表查询也做过优化，从表结构到慢查询定位这套流程我都走过。",
+        "表设计和查询优化我都做过——11 张业务表自己建，索引与联表查询也调过，慢查询定位是常规操作。",
+    ],
+    "data_pipe": [
+        "数据流向上做过批量抓取 → 分级排序 → 结果落库的全链路，遇到单次取数上限就自己拆批并补齐结果，不靠手工反复拉。",
+        "数据流这块我做过批量抓取 → 分级排序 → 结果落库的完整链路；碰上单次取数上限就自己拆批、补齐结果，不手工反复拉。",
+        "从批量抓取到分级排序再到落库，我跑通过整条数据链路；取数有上限的时候自己拆批并把结果合并齐，不靠手动一遍遍拉。",
+    ],
+    "gen_collab": [
+        "习惯先定契约再动手：接口文档、技术方案和模块划分先写清楚再写代码，联调、排错和交接都自己跟。",
+        "我的习惯是先定契约再动手——接口文档、技术方案、模块划分先写清楚，然后才写代码，联调、排错、交接都自己跟到底。",
+        "开工前先把接口文档、技术方案和模块划分定下来，代码跟着契约走；联调、排错和交接这些我也不假手于人。",
+    ],
+    "ai_notrain": [
+        "模型训练与微调我没做过，做的是把大模型接进业务并处理它的慢与不稳，这点我如实说。",
+        "模型训练、微调这些我没碰过；我做过的是把大模型接进业务，再处理它的慢和不稳，这话我得讲在前面。",
+        "训练和微调我确实没做过，我的做法是把大模型接进业务链路，并处理它的慢与不稳——这点不糊弄。",
+    ],
+    "gen_boundary": [
+        "RAG / 向量检索、React、Vue 这些我没在项目里实打实用过，来了可以现学，但我不把没做过的说成做过。",
+        "RAG、向量检索、React、Vue 这些我没在项目里实打实用过，来了可以现学，但我不把没做过的说成做过。",
+        "RAG / 向量检索以及 React、Vue 我都没在项目里真正用过，可以现学，但我不会把没做过的说成做过。",
+    ],
+}
+
 # ── 开头句（20 种，按序号轮换）──────────────────────────────────────
 # 池子必须 ≥ 批次大小，否则「开头句去重 = 批次大小」这条验收线不可能达标
 OPENERS = [
@@ -192,15 +328,78 @@ ECHOES = [
     "JD 中提到的「{kw}」，我这边有可以直接对照的实践。",
     "「{kw}」这条我正好做过，具体做法写在下面。",
     "先从 JD 里「{kw}」这一条说起。",
+    # ↓ 池长必须 ≥ 批次大小（8 句配 17 个岗位 → 点名句重复，正文相似度冲到 0.6）
+    "JD 里的「{kw}」，我做过对应的落地，下面说细节。",
+    "看到「{kw}」这条要求，我手上正好有对应的项目。",
+    "「{kw}」这块我实际写过，下面展开讲做法。",
+    "先拿 JD 里的「{kw}」来对一下。",
+    "贵司写的「{kw}」，我的项目里正好覆盖到。",
+    "关于「{kw}」这一条，我做过对应的实现，下面是过程。",
+    "「{kw}」是我项目里比较实的一块，可以细说。",
+    "从 JD 的「{kw}」这条开始对。",
+    "JD 提到的「{kw}」，我这边有能对照的实践，下面讲。",
+    "「{kw}」这条我做过，下面是具体做法和取舍。",
+]
+
+# 点名句优先从这张表里挑「该 JD 独有且足够具体」的词，
+# 而不是用原子的固定 echo 词（固定的会让同方向的岗位点名同一个词）。
+#
+# ⚠ 这张表是**「点名句里可以声称我做过」的技术白名单**，不是 JD 关键词表。
+# 点名句的句式是「JD 里的「X」我也做过」——一旦把没做过的技术放进来，
+# 就是当场编经历（实测：LangChain 被点名后说「我做过」）。
+# 边界技术（RAG / 向量库 / LangChain / MCP / 微服务 / 模型训练）只能出现在
+# ECHOES_BOUNDARY 那组「我没做过」的句式里，不能进这张表。
+ECHO_POOL = [
+    # 后端 / 数据
+    "spring boot", "mybatis", "mysql", "redis", "docker", "flask", "fastapi",
+    "异步", "超时", "异常隔离", "缓存", "分布式锁", "索引",
+    # 前端 / TS
+    "typescript", "canvas", "单元测试", "vitest", "交互", "响应式",
+    # AI 应用（我真做过的部分）
+    "spring ai", "deepseek", "大模型", "多轮对话", "上下文", "某 AI 客服", "问答",
+    # AI Coding / 工程习惯
+    # 只放「天天用、并且有产出」的：Claude Code / Codex 是主力；
+    # Cursor / Copilot / Trae 只是「打开用过」，不点它们的名——点名句的句式是
+    # 「JD 里的「X」我也做过对应的落地」，对只用过的东西说这句话是夸大。
+    "ai coding", "claude code", "codex", "vibe coding",
+    "开源", "从 0 到 1", "独立交付", "全栈", "前后端联调", "需求拆解",
+    "自动化脚本", "批量", "图像", "视频", "pyqt",
 ]
 
 # JD 里没有足够具体的词可点名时，用这几句
+# 池长必须 ≥ 批次大小，否则一批里多个岗位用同一句 fallback，正文雷同
 ECHOES_FALLBACK = [
     "下面几条是我能对上的地方。",
     "挑几条最能对得上的说。",
     "我的项目里对应的部分大概是这些。",
     "先说我实际做过什么。",
+    "有把握的部分我写在下面。",
+    "说说我真正落地过的内容。",
+    "下面是我能拿出来的实际经历。",
+    "把做过的部分摆出来，您看合不合适。",
+    "我把这几段相关的经历列一下。",
+    "下面这些是我实际动手做过的。",
+    "能对上的经历写在这儿。",
+    "先把我手上对得上的项目摆出来。",
+    "这部分我做过，具体如下。",
+    "写下我真正做过的内容。",
+    "相关经历整理在下面。",
+    "我做过的是这些，展开说一下。",
+    "先说我最有把握的几段。",
+    "下面这段是我自己的实践。",
 ]
+
+# 点名句里不能用的泛词：点出来等于没说，还显得像群发模板
+# 「ai」是重灾区——示例大厂K「ai实习生」这个岗，JD 里除了 ai 没别的具体词，
+# 点名句写成「JD 里提到的『ai』」完全是废话，直接退回 fallback 句。
+ECHO_STOP = {
+    "ai", "aigc", "ml", "开发", "技术", "代码", "编程", "项目", "需求", "团队",
+    "学习", "能力", "实习", "员工", "职责", "工作", "相关", "使用", "熟悉",
+    "掌握", "具备", "api", "git", "系统", "平台", "服务", "业务", "问题",
+    "优化", "设计", "功能", "方案", "环境", "工具", "效果", "能力", "经验",
+    "岗位", "职位", "描述", "要求", "职责", "内容", "方向", "场景", "配合",
+    "良好", "较强", "积极", "主动", "沟通", "意识", "习惯", "素质", "能力",
+}
 
 # 命中「能力边界」原子时不能用「我做过」句式，否则与正文自相矛盾
 ECHOES_BOUNDARY = [
@@ -223,6 +422,18 @@ ENDINGS = [
     "我每周能到岗 5 天，可以连着做 数月以上，方便的话聊聊团队现在的技术栈？",
     "可实习、能做 数月以上没问题，简历已附上，后续想深入哪部分都可以聊。",
     "到岗时间可实习，实习 数月以上没问题。想先了解具体职责和技术选型吗？",
+    # ↓ 池长必须 ≥ 批次大小，否则同一批里结尾句必然重复
+    # （17 个岗位配 10 句 → 结尾句去重只有 10/17）
+    "实习安排我这边完全没问题：可实习、连续 数月以上都可以。方便的话把岗位说明发我一份？",
+    "可实习能到岗，做满 6 个月也没问题。简历已附上，有细节想问我随时说。",
+    "我这周起可实习、连续 数月以上都能保证，需要的话把团队情况介绍下？",
+    "到岗和周期都不是问题：可实习、数月以上长期做。想先看下具体工作内容吗？",
+    "可实习、时间可协商都行。方便的话把 JD 发我，我这边先做功课。",
+    "我这边可实习到岗、能连续做 数月以上，后续想聊技术细节也可以。",
+    "实习周期我可以保证：可实习、数月以上。岗位还有别的要求吗？",
+    "可实习、数月以上没有问题，简历已经附上了。想了解团队分工的话聊聊？",
+    "到岗时间没问题，可实习、连续 数月以上都可以。方便聊聊职责边界吗？",
+    "我每周能实习 5 天，数月以上持续做也没问题。有具体的技术要求吗？",
 ]
 
 # ── 精简版开头 / 结尾 ────────────────────────────────────────────────
@@ -292,8 +503,14 @@ CORE = {
     "can_cache": ["redis", "缓存", "并发", "高并发", "锁", "session", "性能", "延迟", "qps"],
     "can_layer": ["分层", "架构", "设计模式", "重构", "规范"],
     "can_debug": ["调试", "日志", "排查", "异常", "报错", "bug", "定位"],
-    "ai_api": ["llm", "大模型", "agent", "智能体", "aigc", "提示词", "prompt", "spring ai",
-               "deepseek", "工作流", "ai应用", "ai 应用"],
+    "ai_api": ["ai", "llm", "大模型", "agent", "智能体", "aigc", "提示词", "prompt",
+               "spring ai", "deepseek", "ai应用", "ai 应用"],
+    # ⚠ 「ai」必须进 CORE：短词按「非 ASCII 字母数字」判边界后，
+    #   「AI实习生」这种标题能命中了。缺了它，AI 岗的 lead 会掉到
+    #   gen_deploy 这类通用工程化原子身上（示例大厂K那个岗就是这么选错的）。
+    # 能力边界：JD 要求里有「模型训练/微调」时，用这条如实说「训练我没做过」
+    # （CORE 里漏了它 → 这类岗位永远选不上边界原子，只能硬凑一段假经历）
+    "ai_notrain": ["模型训练", "训练", "微调", "调优", "sft", "lora", "预训练", "蒸馏", "量化"],
     "ai_ctx": ["上下文", "多轮", "会话", "context", "记忆", "用户画像"],
     "ai_stable": ["兜底", "降级", "幻觉", "超时", "重试", "限流", "稳定", "审核", "截断"],
     "game_scale": ["游戏", "game", "小游戏", "unity", "玩法", "关卡", "互动"],
@@ -339,6 +556,28 @@ def req_section(jd_text):
     return low[:700]
 
 
+def _count_kw(hay, c):
+    """词条出现次数。两字母词条必须按词边界计数。
+
+    「ci」「cd」这种词条直接用 `in` 会命中 "efficiency"、"procedure" 里的字母对，
+    让「部署运维」原子在毫不相干的 JD 上刷高分（示例大厂K那个岗就是这么选错的）。
+
+    ⚠ 边界不能用 `\\b`：Python 的 `\\b` 是 Unicode 感知的，中文属于 word 字符，
+    所以「AI实习生」里的 ai 前后都挨着中文字符 → `\\bai\\b` **匹配不上**。
+    实测示例大厂K「ai实习生」这个岗，ai_api 原子压根没进候选，只剩「服务器」把
+    gen_deploy 顶成 lead。改用「非 ASCII 字母数字」作边界才符合中文 JD 的实际。
+    """
+    if len(c) <= 2:
+        return len(re.findall(r"(?<![a-z0-9])" + re.escape(c) + r"(?![a-z0-9])", hay))
+    return hay.count(c)
+
+
+def _has_kw(text, c):
+    if len(c) <= 2:
+        return re.search(r"(?<![a-z0-9])" + re.escape(c) + r"(?![a-z0-9])", text) is not None
+    return c in text
+
+
 def match_atoms(jd_text, title):
     """在 JD 正文里匹配证据原子。
 
@@ -346,8 +585,11 @@ def match_atoms(jd_text, title):
       · 核心技术词出现在「任职要求」段 → 3.0；出现在「岗位职责」段 → 1.5；
       · 出现在岗位标题里 → 再 +2.0（标题点明 Java 的岗就该主推 Java 那条）；
       · 命中的技术词越多、重复出现越多，分数越高。
+
+    **标题也要进检索范围**：只搜正文的话，「软件开发实习生 AI 辅助开发 / Vibe Coding」
+    这种只在标题里出现的强信号会被整个跳过，原子退化成「排错/前端」这类弱相关项。
     """
-    hay = norm_lower(jd_text)
+    hay = norm_lower(jd_text + " " + (title or ""))
     req = norm_lower(req_section(jd_text))
     ttl = norm_lower(title)
     out = []
@@ -357,13 +599,13 @@ def match_atoms(jd_text, title):
         occ = 0
         matched = []
         for c in CORE.get(a["id"], []):
-            n = hay.count(c)
+            n = _count_kw(hay, c)
             if n == 0:
                 continue
             distinct += 1
             occ += min(n, 2)
-            w = 3.0 if c in req else 1.5
-            if c in ttl:
+            w = 3.0 if _has_kw(req, c) else 1.5
+            if _has_kw(ttl, c):
                 w += 2.0
             best = max(best, w)
             matched.append((c, w))
@@ -381,32 +623,230 @@ def pick_echo_kw(atom, hits, jd_low):
 
     优先选「既在 JD 里出现、又足够具体」的那个（像 Redis、Agent、单元测试）；
     泛词（git、团队）不拿去点名，避免出现「JD 里写着『git』」这种空话。
+
+    ⚠ 第一轮必须用 **lead 原子自己的 echo 词**，保证「点名什么，正文就讲什么」。
+    实测踩过的坑：示例企业98「后端开发实习生AI+编程开发」这个岗，
+    lead 是 py_web（Python + AI 编程），但 ECHO_POOL 里先命中了「mysql」，
+    点名句写成「mysql 是我项目里比较实的一块」——正文讲的却是 Python + Flask，
+    HR 一眼就看出是套模板。点名词和正文必须自洽。
+
+    第二轮才退回 ECHO_POOL：这张表是「具体技术词」，能保证同方向的岗位
+    点名的词不一样（都用原子的固定 echo 词的话，5 个 Python+AI 岗会一起点名
+    「Python」，正文就长得一模一样）。
+    第三轮兜底用「JD 里命中过的词」时，必须过 ECHO_STOP 泛词黑名单：
+    「ai」这种词点出来是废话，会让整句看起来像群发模板。
+    泛词全被过滤掉就返回 None，调用方走 ECHOES_FALLBACK。
     """
-    best = None
     for e in atom.get("echo", []):
         if e.lower() in jd_low:
+            return e
+    best = None
+    for e in ECHO_POOL:
+        if e in jd_low:
             if best is None or len(e) > len(best):
                 best = e
     if best:
         return best
     for kw, w in hits:
-        if w >= 1.2:
+        if w >= 1.2 and kw.lower() not in ECHO_STOP and len(kw) > 1:
             return kw
     return None
 
 
-def build_main(target, jd, idx, avoid_lead=None):
+def _is_ai_title(title):
+    """岗位标题是不是 AI 方向。"""
+    t = norm_lower(title or "")
+    for k in ("ai", "aigc", "大模型", "agent", "智能体", "llm", "gpt", "aicoding",
+              "ai coding", "ai应用", "ai 应用", "ai开发", "ai 开发", "vibe coding",
+              "提示词", "prompt", "chatgpt", "claude"):
+        if k in t:
+            return True
+    return False
+
+
+# AI 落地类原子：我真做过、且正是 AI 岗最想听的
+AI_LEAD_OK = ("ai_api", "ai_ctx", "ai_stable", "gen_aicode")
+
+
+def _ai_lead_fix(atoms, title, forced=None):
+    """AI 方向岗：把「AI 落地」证据顶成 lead。
+
+    为什么需要：
+    示例大厂K「ai实习生」这个岗，JD 里只零星提到「服务器」「模型训练」，
+    通用打分让 gen_deploy（部署运维）拿了 3.3 分当 lead，正文第一句就成了
+    「看到 JD 里写着『部署』」——跟「参与 AI 开发 / 协助模型训练」八竿子打不着。
+    HR 一看就知道是拿通用模板套的。
+
+    规则：
+      · 标题是 AI 方向、且候选里有 AI 落地类原子 → 最好的那个提到 lead；
+      · 阈值取当前 lead 的 55%，太低（不相关）不动手，太高（AI 命中更强）不动手；
+      · ai_notrain（能力边界）**永远不当 lead**——开场就说「这条我没做过」
+        太消极，边界声明放在正文第二段更合适；
+      · 已有 force_atoms（JD 写死主语言）时不插手，语言的优先级更高。
+    """
+    if forced or not atoms or not _is_ai_title(title):
+        return atoms
+    cands = [a for a in atoms if a[0]["id"] in AI_LEAD_OK]
+    if not cands:
+        return atoms
+    best_ai = max(cands, key=lambda x: x[1])
+    lead = atoms[0]
+    if lead[0]["id"] in AI_LEAD_OK:
+        return atoms  # 本来就是 AI 落地打头，不用动
+    if best_ai[1] < lead[1] * 0.55:
+        return atoms
+    rest = [a for a in atoms if a is not best_ai]
+    return [best_ai] + rest
+
+
+def _jd_body(jd):
+    """取 JD 的「职责 + 要求」正文，排除公司介绍 / 竞争力分析等无关段落。
+
+    示例大厂K那个岗写的是「岗位职责：1. 参与AI相关技术的开发与实现，协助完成
+    模型训练与测试」——「模型训练」在**职责段**而不在要求段，
+    只看要求段会漏掉（实测漏过一次）。
+    """
+    low = jd
+    start = 0
+    for mark in ("岗位职责", "职位描述", "工作内容"):
+        i = low.find(mark)
+        if i >= 0:
+            start = i
+            break
+    end = len(low)
+    for mark in ("公司介绍", "微信扫码分享", "竞争力分析", "BOSS 安全提示",
+                 "查看全部", "工商信", "该公司其他"):
+        i = low.find(mark, start)
+        if i >= 0:
+            end = min(end, i)
+    return low[start:end]
+
+
+# JD 里出现这些词 = 对方要我做模型训练/微调，而我确实没做过
+TRAIN_REQ = ("模型训练", "微调", "预训练", "训练模型", "sft", "lora", "蒸馏", "精调")
+
+
+def _ensure_boundary(atoms, jd):
+    """JD 要求里写了「模型训练/微调」，正文就必须有一段如实说明没做过。
+
+    这是**真实性硬规则**，不是差异化技巧：
+    示例大厂K「ai实习生」JD 写的是「参与AI相关技术的开发与实现，协助完成模型训练与测试」——
+    我没做过模型训练，正文里不写清楚就是隐瞒，HR 技术面一问就穿。
+
+    插到第 2 位（lead 之后）：组装时「第 2 段」是无条件保留的（超长也留，
+    规则是 `used >= 2` 才跳过），保证边界声明一定发得出去。
+    """
+    if any(a[0]["id"] == "ai_notrain" for a in atoms[:2]):
+        return atoms
+    body = _jd_body(jd).lower()
+    if not any(k in body for k in TRAIN_REQ):
+        return atoms
+    by_id = {a["id"]: a for a in ATOMS}
+    na = by_id.get("ai_notrain")
+    if not na:
+        return atoms
+    matched = [(c, 1.0) for c in na["kws"] if c.lower() in jd.lower()] or [("模型训练", 1.0)]
+    item = (na, 3.0, matched)
+    if len(atoms) < 2:
+        return [item] + atoms
+    return [atoms[0], item] + atoms[1:]
+
+
+def build_main(target, jd, idx, avoid_lead=None, used_pairs=None, variant_ctr=None):
     """生成主推版正文（多行）。
 
     avoid_lead：同一公司前面已经用过的 lead 原子 id。
     同一批里同一个 HR 挂了多个岗位时（如「示例文旅W」三个 AI 全栈岗都是同一个人），
     如果证据组合撞车，HR 会收到几条几乎一样的招呼话——直接看着像群发。
     所以把已用过的 lead 原子压到最后，逼它换一个证据组合。
+
+    used_pairs：整批已用过的「lead+次要原子」组合（批次级去撞车）。
+    17 个岗位里有 4 个都是 py_web+ai_api，话术两两相似度最高冲到 0.66——
+    同一个 HR 同时收到两条不同岗位的招呼，会觉得是群发。
+    所以同一组证据组合在一批里只用一次，后面遇到就顺位往后挑。
+
+    target['force_atoms']：指定必须出现在话术里的证据原子 id。
+    通用打分按「命中词多的原子」取胜，但 JD 写死主语言时（如「熟悉 Python 语言」）
+    会输给「排错/异常」这类原子——这时用 force_atoms 把语言证据顶上来。
+
+    variant_ctr：各原子在整批里已被采用过的次数，用来轮换同一原子的
+    不同真实表述（见 ATOM_TEXT_VARIANTS）。
     """
     jd_low = jd.lower()
+    if variant_ctr is None:
+        variant_ctr = Counter()
     atoms = match_atoms(jd, target.get("position", ""))
+    forced = target.get("force_atoms") or []
+    if not forced and target.get("req_lang"):
+        # JD 写死了单一主语言 → 把该语言的证据顶上来
+        aid = {"python": "py_web", "java": "can_stack",
+               "typescript": "game_fe"}.get(target["req_lang"])
+        if aid:
+            forced = [aid]
+    if forced:
+        by_id = {a["id"]: a for a in ATOMS}
+        f_atoms = []
+        for fid in forced:
+            a = by_id.get(fid)
+            if not a:
+                continue
+            matched = [(c, 1.0) for c in a["kws"] if c.lower() in jd_low] or [(a["kws"][0], 1.0)]
+            f_atoms.append((a, 9.0, matched))
+        if f_atoms:
+            atoms = f_atoms + [a for a in atoms if a[0]["id"] not in forced]
+    atoms = _ai_lead_fix(atoms, target.get("position", ""), forced=forced)
     if avoid_lead:
         atoms = sorted(atoms, key=lambda x: (x[0]["id"] == avoid_lead, -x[1]))
+    if used_pairs:
+        # 整批去撞车：把「组合已用过」的原子往后压。
+        # 只在得分接近时才换（阈值取 lead 的 80%）——匹配度优先。
+        # 实测：示例企业64 ai_api 5.90 / gen_aicode 5.70（并列，换谁都贴）；
+        #       示例企业48 ai_api 6.90 / gen_boundary 5.70（边界证据也贴，正好错开）。
+        def _pair_key(a, b):
+            return (a[0]["id"], b[0]["id"])
+        n = len(atoms)
+        # 强制原子（语言硬要求）被打到 9.0 分，不能拿它当阈值基准，
+        # 否则阈值被抬到 7.2，所有次要原子都被挡在门外，一批同方向的岗位只能撞车。
+        forced_ids = set(forced)
+        real_sc = max((a[1] for a in atoms if a[0]["id"] not in forced_ids),
+                       default=atoms[0][1])
+        limit = real_sc * 0.80
+        # 第二原子的门槛比第一原子宽：正文第一段（lead）才是重点，
+        # 第二段只要别太离谱就行。原来两个原子用同一个 0.80 门槛，
+        # 结果 5 个 py_web/ai_api 岗位的 (lead, second) 全被判成「没有可用组合」，
+        # 只能原样保留 → 正文两段一字不差。
+        limit_b = real_sc * 0.50
+        # 第一轮：找「(lead, second) 没用过」的组合
+        picked = None
+        for k in range(n):
+            a = atoms[k]
+            b = atoms[(k + 1) % n]
+            # 注意这里用 continue 不是 break：某个位置的分数偏低不代表后面就没有
+            # 更合适的位置（原来 break 会直接放弃，5 个 py_web/ai_api 岗位因此撞车）。
+            if a[1] < limit or b[1] < limit_b:
+                continue
+            if _pair_key(a, b) not in used_pairs:
+                picked = k
+                break
+        if picked is not None:
+            if picked:
+                atoms = atoms[picked:] + atoms[:picked]
+        else:
+            # 第二轮：所有 (lead, second) 组合都撞过车 → 保持 lead 不动，
+            # 换一个第二原子。前提是这个组合本身在批次里已经出现过 ≥2 次
+            # （第 1、2 次允许重复：匹配度比差异度重要）。
+            lead = atoms[0]
+            rest = [a for a in atoms[1:] if a is not lead]
+            for cand in sorted(rest, key=lambda x: -x[1]):
+                if cand[1] < limit_b:
+                    break
+                key = _pair_key(lead, cand)
+                if used_pairs.get(key, 0) >= 2:
+                    atoms = [lead, cand] + [a for a in atoms[1:] if a is not cand]
+                    break
+    # 边界声明放在去撞车之后插入：插入会改变 (lead, second) 组合，
+    # 如果放在前面，会把去撞车的结果搅乱。
+    atoms = _ensure_boundary(atoms, jd)
     if not atoms:
         atoms = [(a, 1, [(a["kws"][0], 1.0)]) for a in ATOMS if a["id"] in
                  ("can_stack", "gen_collab", "gen_full", "game_fe")]
@@ -454,7 +894,12 @@ def build_main(target, jd, idx, avoid_lead=None):
         if lbl is None:
             lbl = cands[used % len(cands)]
         label_seen[lbl] += 1
-        line = f"**【{lbl}】**{a['text']}"
+        # 同一原子的多种真实表述轮换：证据一样，但说法不一样。
+        # 5 个 py_web/ai_api 岗位用同一套原子时，正文两段一字不差就太像群发。
+        texts = ATOM_TEXT_VARIANTS.get(a["id"]) or [a["text"]]
+        vi = variant_ctr[a["id"]] % len(texts)
+        variant_ctr[a["id"]] += 1
+        line = f"**【{lbl}】**{texts[vi]}"
         # 超出长度档就跳过这条（后面可能还有更短的原子），但至少保证 2 条证据
         if sum(len(x) for x in lines) + len(line) + reserve > tier and used >= 2:
             label_seen[lbl] -= 1
@@ -512,18 +957,25 @@ def main():
     out = []
     missing = []
     company_lead = {}      # 公司 → 该公司前面已用过的 lead 原子（同 HR 多岗位去撞车）
+    used_pairs = Counter()  # 整批已用过的「lead+次要」原子组合 → 次数（批次级去撞车）
     company_n = Counter()  # 公司 → 已生成份数
-    for i, t in enumerate(targets):
+    variant_ctr = Counter()  # 各证据原子已被采用次数（轮换同义表述）
+    start_idx = int(os.environ.get("GD2_START_IDX", "0"))
+    no_overwrite = os.environ.get("GD2_NO_OVERWRITE", "") == "1"
+    for i0, t in enumerate(targets):
+        i = i0 + start_idx
         jd = (jds.get(t["label"]) or {}).get("jd", "")
         if len(jd) < 120:
             missing.append(t["label"])
             continue
         comp = t.get("company", "")
         avoid = company_lead.get(comp)
-        main_txt, used, atom_ids = build_main(t, jd, i, avoid)
+        main_txt, used, atom_ids = build_main(t, jd, i, avoid, used_pairs, variant_ctr)
         short_txt = build_short(t, jd, i)
         if atom_ids:
             company_lead.setdefault(comp, atom_ids[0])
+            _k = (atom_ids[0], atom_ids[1] if len(atom_ids) > 1 else "")
+            used_pairs[_k] = used_pairs.get(_k, 0) + 1
         company_n[comp] += 1
         try:
             check_body(main_txt)
@@ -544,7 +996,13 @@ def main():
         # 简历图：JD 里的 AI 编程工具密度高 → 发 AI Coding 版，否则发全量版
         jd_low = jd.lower()
         aic = sum(1 for k in AI_CODING_KWS if k in jd_low)
-        imgs = IMGS_AICODE if aic >= 2 else IMGS_GENERIC
+        # 密度阈值 2 会漏掉「熟练使用 AI 编程工具，并对生成结果进行独立验证」这类
+        # 只有一处提到、但明显是硬要求的写法（示例科技P AI应用开发）——单独判一次。
+        aic_hard = bool(re.search(
+            r"(熟练使用|熟练运用|能够使用|必须会|会用|使用)\s*"
+            r"(ai\s*编程工具|ai\s*开发工具|claude\s*code|cursor|codex|copilot|trae)",
+            jd_low))
+        imgs = IMGS_AICODE if (aic >= 2 or aic_hard) else IMGS_GENERIC
         src_pdf = (r"AI Coding全栈工程师\你的名字-AICoding全栈工程师.pdf（AI Coding 方向 2 页）"
                    if imgs is IMGS_AICODE else r"研发实习生\候选人-实习.pdf（全量版 3 页 11 项目）")
         t["imgs"] = imgs
@@ -575,6 +1033,10 @@ def main():
 - 某 AI 客服：5 个 RESTful 端点 / CompletableFuture 异步 + 30 秒超时 / 异常隔离 / 1–3 秒 / < 50 毫秒
 - GitHub：若干个公开仓库 / 多次提交（`gh_count.py` 实测，非 fork 仓库）
 """
+        if no_overwrite and os.path.isfile(os.path.join(d, "新建 文本文档.txt")):
+            # 已投递批次的话术归档不能被覆盖：归档必须等于实际发出去的内容
+            print(f"  = {folder[:44]:<46} 已存在，跳过（不覆盖）")
+            continue
         with io.open(os.path.join(d, "新建 文本文档.txt"), "w", encoding="utf-8") as fp:
             fp.write(content)
         out.append(dict(label=folder, jobId=t["jobId"], company=t["company"],
@@ -595,7 +1057,7 @@ def main():
     print(f"\n生成 {len(out)} 份差异化话术")
     if missing:
         print(f"!! JD 未就绪 {len(missing)} 个：{missing}")
-    print(f"→ {os.path.join(WORK, 'gd2_msg_report.json')}")
+    print(f"→ {os.path.join(WORK, report_name)}")
     print(f"→ {os.path.join(WORK, final_name)}（投递用）")
 
 
