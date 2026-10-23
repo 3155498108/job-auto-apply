@@ -12,6 +12,7 @@
 
 ```
 job-auto-apply/
+├── install_skill.py                 ← 一键安装/校验 skill（标准库，无依赖）
 ├── skill/job-auto-apply/          ← 新写的 skill（多平台版）
 │   ├── SKILL.md                       流程 / 输入 / 输出契约 / 失败处理 / Windows 适配
 │   └── references/
@@ -60,13 +61,38 @@ job-auto-apply/
 
 ## 安装 skill
 
-把 `skill/job-auto-apply/` 整个目录复制到智能体的 skills 目录下即可：
+skill 就是本仓库的 `skill/job-auto-apply/` 目录。装到智能体的 skills 目录下才会被加载。
+
+**一条命令搞定**（自动检测本机装了哪些 agent、只下载 skill 本体、校验 frontmatter）：
+
+```powershell
+python install_skill.py
+```
+
+| 命令 | 作用 |
+|---|---|
+| `python install_skill.py` | 从 GitHub 装到检测到的 agent |
+| `python install_skill.py --list` | 只看检测到什么、装了什么 |
+| `python install_skill.py --check` | 校验已装版本是否与 GitHub 一致 |
+| `python install_skill.py --target claude` | 指定 agent（`minimax` / `claude` / `codex` / `all`） |
+| `python install_skill.py --from <本地 clone 目录>` | 离线安装 |
+
+装完**重新打开 agent 会话**让 skill 生效，然后让它跑一次环境自检：
+
+```powershell
+& "$env:USERPROFILE\.kimi-webbridge\bin\kimi-webbridge.exe" status
+```
+
+手动装也可以：把 `skill/job-auto-apply/` 整个目录复制到
 
 ```
 YOUR_HOME\.minimax\skills\job-auto-apply\
 ```
 
-装完用自然语言触发，例如「猎聘也接上自动投递」「这批投递核对一下」「话术别一套模板」。
+（`~/.claude/skills/` / `~/.codex/skills/` 同理）
+
+装完用自然语言触发，例如「猎聘也接上自动投递」「这批投递核对一下」「话术别一套模板」
+「第一次用，先做环境自检」。
 
 ## 跑起来需要什么
 
