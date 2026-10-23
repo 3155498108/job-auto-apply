@@ -22,6 +22,9 @@
 
 ## 二、现成轮子（接平台前先看这里，别重复造）
 
+> **顺序提醒**：先翻本地 `marvis\scripts\wb_*.py` —— BOSS 与 51job 的适配器**已经跑通**，
+> 投这两个平台根本不需要往下看。**下面这张表是「本地没有的平台」才需要的。**
+
 | 仓库 | 平台 | 技术栈 | 备注 |
 |---|---|---|---|
 | [loks666/get_jobs](https://github.com/loks666/get_jobs) ★8.4k | BOSS / 猎聘 / 51job / 智联 | Spring Boot + Patchright(Playwright) + SQLite + Next.js | **最值得参考**。一类一文件的平台适配器：`boss/Boss.java`、`liepin/Liepin.java`、`job51/Job51.java`、`zhilian/ZhiLian.java`。作者只维护 BOSS + 猎聘，51job/智联已停维护。AI 自动写打招呼语仅 BOSS 支持 |
