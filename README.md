@@ -15,6 +15,7 @@ job-auto-apply/
 ├── skill/job-auto-apply/          ← 新写的 skill（多平台版）
 │   ├── SKILL.md                       流程 / 输入 / 输出契约 / 失败处理 / Windows 适配
 │   └── references/
+│       ├── onboarding.md                新人第一次用：前置条件 / 环境自检 / 端到端走查
 │       ├── platform-adapters.md        各平台现状 + 现成轮子清单 + 适配器接口
 │       ├── greeting-engine.md          证据原子模型 + 差异化量化验收
 │       ├── safety-checklist.md         七道安全闸 + DOM 陷阱 + JD 劝退词表 + 上游踩坑六条

@@ -8,9 +8,12 @@ description: |
   complains that the 打招呼话术 is 一套模板 for everyone, asks to 核对 a batch of applications
   ("投了吗" / "送达了没" / "核对一下"), or asks which postings are worth applying to.
   Triggers on: 牛客, 58同城, 前程无忧, 51job, 猎聘, 智联, BOSS直聘, 自动投递, 批量投递, 海投,
-  打招呼话术, 差异化话术, 投递记录, 核对送达, 简历投递自动化.
+  打招呼话术, 差异化话术, 投递记录, 核对送达, 简历投递自动化,
+  环境自检, WebBridge, 插件, 扩展, 新人上手, 第一次用.
   Do NOT use for: reading a single JD and hand-writing a tailored resume/greeting with no
   automation (use job-application-kit), or for reading/answering HR messages.
+  Also load when the user asks about 环境自检 / 插件装没装 / WebBridge 连不上 / 页面加载不出来,
+  or is using this automation for the first time on a new machine.
 ---
 
 # Job Auto Apply
@@ -31,6 +34,114 @@ description: |
 
 缺哪一项先问；能从上下文和已有产物推出来的（简历目录、话术目录、记录文件路径）直接读，不要反问。
 
+## 第 0 步 · 环境自检（插件装没装、能不能开跑）
+
+**任何投递动作之前都必须先跑这一步。** 插件没装 / daemon 没起 / 账号没登录，
+后面所有脚本都会以「页面加载不出来」的样子报错，很容易误判成脚本坏了而白折腾。
+
+一条命令看全部状态（可执行文件通常在 `~/.kimi-webbridge/bin/kimi-webbridge.exe`）：
+
+```powershell
+& "$env:USERPROFILE\.kimi-webbridge\bin\kimi-webbridge.exe" status
+```
+
+返回里逐项对照：
+
+| 字段 | 期望 | 不满足时怎么办 |
+|---|---|---|
+| `running` | `true` | `& "...\kimi-webbridge.exe" start` |
+| `extension_connected` | `true` | **只能由用户手动装/启用扩展**，见下 |
+| `port` | `10086` | 端口被占就换端口，并同步改 `wb.py` 的 `BASE` |
+| `version` / `extension_version` | daemon 与扩展版本 | 差太多先升级扩展 |
+| `skills` | 列出**哪些 agent** 装了 kimi-webbridge skill | 决定走哪条驱动路径，见下 |
+| `tab_id_arg` | `true` | 多标签页场景要带 `tabId` |
+
+**扩展没连上时，只有用户能修**（要人在浏览器里点）：
+
+1. 打开 Chrome/Edge → `chrome://extensions` → 右上角开「开发者模式」
+2. 安装 Kimi WebBridge 扩展（扩展包在 `~/.kimi-webbridge/`，或从官方渠道拿）
+3. 安装后点扩展图标连上（图标变绿 / 显示已连接）
+4. 回到上面那条 `status`，确认 `extension_connected: true`
+
+**两条驱动路径，选一条**（别混用）：
+
+- **A. 本 agent 装了 kimi-webbridge skill** —— `status` 的 `skills` 数组里能看到本 agent 时，
+  直接用 skill 的 CLI 驱动浏览器。
+- **B. 本 agent 没装 skill** —— 实测 MCode 就是这种（`~/.minimax/skills/kimi-webbridge` 不存在，
+  只有 `.claude` / `.codex` 目录里有）。这时走 **HTTP API**，`marvis/scripts/wb.py` 已封装：
+
+  ```python
+  from scripts.wb import call, evaluate, navigate
+  call("list_tabs", {})                      # 列出标签页
+  evaluate("location.href")                  # 执行 JS
+  call("navigate", {"url": "https://..."})   # 导航
+  ```
+
+  请求体是 JSON，**含中文时必须写临时文件再用 `curl.exe --data-binary "@file"` 发送**
+  （`wb.py` 已封好，别自己手拼 curl —— PowerShell 会破坏内联 JSON 里的中文）。
+
+**daemon 通了、扩展也连上了，还得查账号**。`env_check.py` 一次查完四件事：
+daemon 可达 → 标签页可交互 → 目标平台已登录 → 本地 `user_profile.json`
+与登录账户的**用户名 / 城市**是否对得上。
+
+```powershell
+python marvis\scripts\env_check.py
+```
+
+> `env_check.py` 里 `evaluate("1+1")` 能返回 `"2"`，本身就是「扩展已连接」的证明
+> ——要执行 JS 必须经过扩展。
+
+**登录态被踢**（页面跳到 `/web/user/` 或出现登录二维码）时**立即停批**，
+让用户扫码重登，不要继续空点。裁剪登录页二维码给用户扫。
+
+## 新人第一次用这个 skill：会经历什么
+
+> 完整走查（含要准备的文件、第一次跑常犯的错）见 `references/onboarding.md`。
+
+| 步 | 用户要做 | Agent 自动做 |
+|---|---|---|
+| 0 | 装扩展、起 daemon、登录平台 | 跑 `env_check.py`，直接报出缺哪一项 |
+| 1 | 说清平台 / 范围 / **是否允许直接发送** | 收集输入；能推出来的直接读，不反问 |
+| 2 | 授权「直接发、继续投、扩投」 | 先查 GitHub 有没有现成轮子 |
+| 3 | — | 探测该平台的**投递形态**能不能自动化（决定全自动 or 半自动） |
+| 4 | — | 抓 JD → 按正文筛 → 汇报**筛掉了哪些、依据哪句原文** |
+| 5 | 想看就看一眼话术 | 按 JD 生成差异化话术 + 跑差异度量化验收 |
+| 6 | **没有明确授权就停在这** | 投递（对外可见、不可撤回） |
+| 7 | — | 回消息页逐个核对（**不信脚本自报**） |
+| 8 | — | 写回 `投递记录.md` + `boss_manifest.json` |
+| 9 | 看最终汇报 | 只报**实测数字**：送达几个 / 合格几个 / 劝退几个 |
+
+**三条硬规矩，新人最容易踩**：
+
+1. **没授权不发送。** 准备材料（抓 JD、筛岗、生成话术、归档）可以随便做，
+   但「打招呼」「点立即沟通」「发附件」是**对外可见、不可撤回**的操作，
+   必须拿到明确授权才做。
+2. **投递脚本说「成功」不算成功。** 必须回消息页读 DOM 逐个核对。
+3. **话术里每个数字都要能核实。** 没做过的技术绝不能出现
+   （没做过模型训练 / RAG / React / Vue / Rust / 微服务 / LangChain 系就别写）。
+
+**开始前要准备的文件**（缺了先问用户或从 `user_profile.json` 读）：
+
+| 文件 | 作用 | 缺了会怎样 |
+|---|---|---|
+| `招聘\<岗位>\新建 文本文档.txt` | 话术归档（主推版/精简版） | `pick_by_company()` 取不到话术，会回退成通用模板 |
+| `招聘\<岗位>\*.pdf` + 简历截图 `*.png` | 投递时发的附件简历 | 没有图就只能发纯文字，转化率明显下降 |
+| `招聘\boss_manifest.json` | 机器可读幂等清单 | 没有就会**重复投递**已投过的岗位 |
+| `output\投递记录.md` | 总记录 | 写不回去，这轮等于没留痕 |
+| `marvis\user_profile.json` | 求职画像（证据原子来源） | 话术只能写空话，没有差异化 |
+
+
+## references 索引
+
+| 文件 | 什么时候翻它 |
+|---|---|
+| `references/onboarding.md` | **第一次用这个 skill** —— 前置条件、环境自检、目录准备、端到端走查、常见报错对照表 |
+| `references/platform-adapters.md` | 接新平台：各平台现状、现成轮子清单、适配器接口、投递形态探测顺序 |
+| `references/greeting-engine.md` | 生成话术：证据原子模型、组合维度、差异度量化验收 |
+| `references/safety-checklist.md` | 七道安全闸、JD 劝退词表、DOM 陷阱、条目级强度判定 |
+| `references/second-touch.md` | 第二次触达（未读会话补发）：已读判定口径、虚拟滚动、点击原子化、话术写法 |
+| `references/upstream-pitfalls.md` | 上游 34 条实战坑位全记录（改脚本/换平台时查） |
+
 ## 本机现状
 
 - **本 skill 的源码仓（公开）**：`https://github.com/3155498108/job-auto-apply`
@@ -38,7 +149,8 @@ description: |
 - 简历与归档：`YOUR_HOME\`（`招聘\<岗位>\` 存 PDF/截图/话术三件套，
   `output\投递记录.md` 是总记录，`招聘\boss_manifest.json` 是机器可读清单）
 - 自动化工程：`YOUR_REPO\marvis\scripts\`（BOSS 全链路已跑通，
-  累计 150 条 manifest 记录、173 个 jobId 幂等清单）。该目录的基座来自公开仓库
+  累计 **176 条 manifest 记录 / 167 个唯一 jobId** 幂等清单，164 个脚本）。
+  该目录的基座来自公开仓库
   `taohuajianxian/boss-zhipin-assistant`，其 34 条实战坑位记录已收进
   `references/upstream-pitfalls.md`，其中 6 条已提炼进 `references/safety-checklist.md`。
 - **51job 全链路已跑通（2026-10-23）**：适配器实现见 `marvis\scripts\wb_51job*.py`（126 个脚本），
@@ -68,7 +180,7 @@ description: |
 
 ### 2. 写平台适配器
 
-**先做第 0 步：确认这个平台的投递形态能不能自动化。**
+**环境自检通过后，先做形态探测：确认这个平台的投递形态能不能自动化。**
 猎聘的「打招呼语」按官方规则要在手机 App 里设置，网页端可能不允许发自定义文本——
 这一条决定后面是全自动还是半自动（自动筛 + 自动生成话术，发送由用户在 App 完成）。
 探错了整套适配器写法都要重做，所以放在最前面。探测顺序见
@@ -319,6 +431,39 @@ manifest + result，口径本来就是对的，两个函数不要混用。
   不报错但投递没提交。必须**选对叶子节点**并等 ≥2.5s 再点「发送」。
 - **用户要撤回或重发**：网页版多数平台没有逐条撤回入口，只能让用户手删；
   已经发出去的话无法撤销，补发一条新话术反而更像群发——先问用户再决定。
+
+### 会话页特有的坑（BOSS 消息页，2026-10-23 实测）
+
+这四条集中踩在「浏览会话 → 点开会话 → 读消息 → 发消息」这条链路上，
+细节与修法见 `references/second-touch.md`：
+
+- **会话列表只看得到前 40 条**：列表是虚拟滚动，容器是 `.user-list-content`，
+  **直接设 `scrollTop` 不触发懒加载**，必须手动 `dispatchEvent(new Event('scroll'))`。
+  没做这一步就会得出「只有 40 个会话」的错误结论。
+- **点了没反应**：查询元素和 `click()` 必须在**同一次 `evaluate`** 里完成 ——
+  虚拟列表在两次调用之间会重渲染，先查到的节点到手时已失效，`click()` 静默失败。
+- **点开后读到的是上一个会话**：选中态是**异步**的，固定 `sleep(2)` 不够，
+  要轮询等 `.friend-content.selected` 的文本对上目标再读。
+- **`evaluate` 返回 JS 对象 → Python 端所有字段读成空**：
+  必须 `return JSON.stringify({...})`。症状是「所有会话都说不匹配、计数全是 0」，
+  看着像逻辑错，其实是解析失败。
+- **「未读」判错会导致误发**：只看**最后一条**我方消息的状态是不够的 ——
+  对方回话后我方又回过一句时，最后一条是「送达」而更早的早已「已读」。
+  正确口径见 `references/second-touch.md` 第一节。
+
+### 详情页公司名取错元素
+
+`wb_deliver.detail_company()` 是一串兜底选择器，**会抓到页面上无关的公司名**：
+实测在示例大厂K/示例科技Z/示例科技M/示例科技Y/示例科技O 5 个岗位上，分别取到了
+「西安示例公司AC」「示例网络Y」「示例科技Z」「示例科技AA」等（推荐位/竞品区的公司）。
+
+所以公司校验必须两道：
+
+1. **投递前**：页面正文（前 400 字）含目标公司名 —— 只用 `detail_company()` 会误判
+2. **投递后**：会话头（HR 名 + 公司 + 角色）对位 —— 这是最终判据
+
+同理岗位名也只做**软校验**（页面标题含目标岗位关键词），最终以会话面板的
+`.position-name` 为准。
 
 ## Windows (win32) platform notes
 
