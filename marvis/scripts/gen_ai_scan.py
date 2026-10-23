@@ -24,6 +24,9 @@ from scripts.wb_scan3 import load_done
 
 WORK = r"YOUR_HOME\output\boss_work"
 MAX_TOTAL = int(os.environ.get("AI_MAX", "30"))
+# 归档前缀：每轮用新前缀，避免与旧批次目录撞名
+# （`pick_by_company()` 按公司名前缀匹配，folder 名不带批次前缀会串批）
+PREFIX = os.environ.get("AI_PREFIX", "广东AI")
 CITY_QUOTA = {"深圳": 10, "广州": 12, "东莞": 5, "佛山": 5, "珠海": 4, "惠州": 3,
               "中山": 3, "汕头": 2, "某城市": 2, "江门": 1, "肇庆": 1}
 
@@ -124,7 +127,7 @@ def main():
         title = j.get("title") or ""
         comp = j.get("company") or ""
         c = j.get("_city") or j.get("city") or ""
-        folder = f"广东AI-{safe(comp)}-{safe(title)}-{safe(c)}"
+        folder = f"{PREFIX}-{safe(comp)}-{safe(title)}-{safe(c)}"
         targets.append(dict(label=folder, folder=folder, jobId=jid, city=c,
                             company=comp, position=title, salary=j.get("salary", ""),
                             tpl="JD定制", score=sc, industry=j.get("industry", ""),

@@ -4,7 +4,7 @@
 **抓 JD → 按 JD 生成差异化话术 → 浏览器投递 → 逐个核对 → 写回记录**。
 新接一个平台 = 写一个平台适配器，其余环节复用。
 
-> 私有仓库。里面含个人求职画像与脚本，请勿公开。
+> 公开仓库。脚本与流程公开，个人求职画像、简历、话术归档**不在本仓库内**。
 
 ---
 
@@ -18,11 +18,12 @@ job-auto-apply/
 │       ├── platform-adapters.md        各平台现状 + 现成轮子清单 + 适配器接口
 │       ├── greeting-engine.md          证据原子模型 + 差异化量化验收
 │       ├── safety-checklist.md         七道安全闸 + DOM 陷阱 + JD 劝退词表 + 上游踩坑六条
+│       ├── second-touch.md             第二次触达（未读会话补发）实测手册
 │       └── upstream-pitfalls.md        上游 34 条实战坑位全记录（改脚本/换平台时查）
 └── marvis/                          ← 自动化脚本工程（上游基座 + 本地演进）
     ├── SKILL.md                        上游原版 skill（v1，单平台）
     ├── references/                     上游文档，含 pitfalls.md（34 条实战坑位）
-    ├── scripts/                        150 个脚本
+    ├── scripts/                        164 个脚本
     ├── user_profile.json               求职画像（活数据，会被自动读取）
     ├── greetings.json                  打招呼语模板（活数据）
     └── boss_applied.json               已投记录
@@ -45,6 +46,11 @@ job-auto-apply/
 | `scripts/gen_jd_msg.py` | 证据原子 + 确定性组合的话术生成器 |
 | `scripts/diff_report.py` | 差异化度量（字符 3-gram Jaccard） |
 | `scripts/wb_cross.py` / `wb_fav_check.py` | 通用投递链路 + 送达核对（清单与前缀走环境变量） |
+| `scripts/wb_deliver_batch.py` | 按 `final.json` 批量投递（岗位名/公司名双校验 + 简历图上传 + 逐个核对） |
+| `scripts/wb_verify_batch.py` | 独立复核：重开消息页逐个点开会话重数话术条数与简历图张数 |
+| `scripts/wb_resend.py` | 第二次触达：给「已投但对方未读」的会话补发（四道闸 + 断点续跑 + 登录态守卫） |
+| `scripts/wb_conv_states.py` | 会话状态全量收集（虚拟滚动：`.user-list-content` + 派发 scroll 事件） |
+| `scripts/match_unread.py` / `gen_resend.py` | 未读候选筛选（含投递天数分层）+ 第二次触达话术生成 |
 | `scripts/scan_gd.py` / `gen_gd.py` / `gen_gd2.py` | 按城市扫描与选岗 |
 | `scripts/gh_count.py` | 核对 GitHub 仓库数与 commit 数 |
 | `scripts/fix_github_claim*.py` | 更正话术里过时的 GitHub 数字 |

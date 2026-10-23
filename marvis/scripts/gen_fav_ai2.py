@@ -21,6 +21,9 @@ from scripts.wb_scan3 import load_done
 from scripts.wb_fav_ai2 import AI_RE, PRODUCT_HINT, WEAK_DIR, text_of
 
 WORK = r"YOUR_HOME\output\boss_work"
+# 归档前缀：每轮用新前缀，避免与旧批次目录撞名
+# （`pick_by_company()` 按公司名前缀匹配，folder 名不带批次前缀会串批）
+PREFIX = os.environ.get("FAV_PREFIX", "收藏AI2")
 
 
 def main():
@@ -69,11 +72,11 @@ def main():
         item["folder"] = label
         targets.append(item)
 
-    json.dump(targets, io.open(os.path.join(WORK, "favai2_targets.json"), "w", encoding="utf-8"),
+    json.dump(targets, io.open(os.path.join(WORK, f"{PREFIX}_targets.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=1)
-    json.dump(products, io.open(os.path.join(WORK, "favai2_products.json"), "w", encoding="utf-8"),
+    json.dump(products, io.open(os.path.join(WORK, f"{PREFIX}_products.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=1)
-    print(f"技术向目标 {len(targets)} 个 → favai2_targets.json")
+    print(f"技术向目标 {len(targets)} 个 → {PREFIX}_targets.json")
     print(f"产品/标注向 {len(products)} 个（不投）")
     for t in targets:
         mark = " ⚠超纲向" if t["weak_dir"] else ""
