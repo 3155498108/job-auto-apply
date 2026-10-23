@@ -1,8 +1,17 @@
-# job-auto-apply · 多平台招聘自动投递
+# job-auto-apply · 招聘自动投递（BOSS 直聘 + 前程无忧 51job）
 
 把「在招聘平台上批量投递」固化成一条可复用流水线：
 **抓 JD → 按 JD 生成差异化话术 → 浏览器投递 → 逐个核对 → 写回记录**。
-新接一个平台 = 写一个平台适配器，其余环节复用。
+
+**支持范围只有两个平台，都是全链路跑通过的：**
+
+| 平台 | 投递形态 | 差异化落在哪 |
+|---|---|---|
+| **BOSS 直聘** | 点「立即沟通」→ 消息页发话术 + 传简历图 | 按 JD 定制的话术（证据原子 + 组合） |
+| **前程无忧 51job** | 点「投递」即提交，**没有话术框、没有站内聊天** | 在线简历「个人优势」+ 选对附件简历 |
+
+猎聘 / 智联 / 58 / 牛客**没有适配器**，接它们属于扩展开发（见
+`skill/job-auto-apply/references/platform-adapters.md`），不是开箱即用。
 
 > 公开仓库。脚本与流程公开，个人求职画像、简历、话术归档**不在本仓库内**。
 
@@ -13,11 +22,11 @@
 ```
 job-auto-apply/
 ├── install_skill.py                 ← 一键安装/校验 skill（标准库，无依赖）
-├── skill/job-auto-apply/          ← 新写的 skill（多平台版）
+├── skill/job-auto-apply/          ← 新写的 skill（BOSS + 51job 两平台版）
 │   ├── SKILL.md                       流程 / 输入 / 输出契约 / 失败处理 / Windows 适配
 │   └── references/
 │       ├── onboarding.md                新人第一次用：前置条件 / 环境自检 / 端到端走查
-│       ├── platform-adapters.md        各平台现状 + 现成轮子清单 + 适配器接口
+│       ├── platform-adapters.md        扩展参考：各平台现状 + 现成轮子清单 + 51job 实战手册
 │       ├── greeting-engine.md          证据原子模型 + 差异化量化验收
 │       ├── safety-checklist.md         七道安全闸 + DOM 陷阱 + JD 劝退词表 + 上游踩坑六条
 │       ├── second-touch.md             第二次触达（未读会话补发）实测手册
@@ -41,7 +50,7 @@ job-auto-apply/
 
 | 内容 | 说明 |
 |---|---|
-| `skill/job-auto-apply/` | 全新 skill。补齐了上游没有的「按 JD 定制话术」「多平台适配」「量化验收」三块 |
+| `skill/job-auto-apply/` | 全新 skill。补齐了上游没有的「按 JD 定制话术」「BOSS + 51job 双平台适配」「量化验收」三块 |
 | `scripts/wb_jd.py` | 抓 job_detail 的 JD 全文 |
 | `scripts/jd_filter.py` | 基于 JD 职责/要求两段做硬性劝退 |
 | `scripts/jd_screen.py` | JD 内容风险标签扫描（人工复核用） |
@@ -91,8 +100,8 @@ YOUR_HOME\.minimax\skills\job-auto-apply\
 
 （`~/.claude/skills/` / `~/.codex/skills/` 同理）
 
-装完用自然语言触发，例如「猎聘也接上自动投递」「这批投递核对一下」「话术别一套模板」
-「第一次用，先做环境自检」。
+装完用自然语言触发，例如「BOSS 这批投递核对一下」「前程无忧也投一批」
+「话术别一套模板」「第一次用，先做环境自检」。
 
 ## 跑起来需要什么
 
@@ -119,8 +128,15 @@ YOUR_HOME\.minimax\skills\job-auto-apply\
 
 ## 核对口径
 
+**BOSS 直聘：**
+
 > **送达 = 会话内有含本人标识的话术 + ≥2 张简历图**，且头部岗位名与目标对位。
 > 岗位名前后缀差异只作备注，不算失败。
+
+**前程无忧 51job**（没有站内聊天，核对入口完全不同）：
+
+> **送达 = 「我的申请」记录页出现这一条**（`i.51job.com/userset/my_apply.php`）。
+> 记录页是权威口径；附件绑定状态看 `modify-attach-resume` 回执 `{"status":"1"}`。
 
 ## 事实纪律
 
