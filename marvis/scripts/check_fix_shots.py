@@ -18,6 +18,10 @@ import numpy as np
 RECRUIT = r"YOUR_HOME\招聘"
 ZOOM = 300 / 72.0
 
+# 期望出现在简历里的数字 —— 改成你自己的（也可以用环境变量传）
+EXPECT_GAMES = os.environ.get("EXPECT_GAMES", "")
+EXPECT_LINES = os.environ.get("EXPECT_LINES", "")
+
 # (会话关键词, 截图相对招聘目录的路径, 说明)
 TARGETS = [
     ("候选人F女士示例科技Y", r"示例科技A-后端JAVA开发实习生\shot_示例20_p1.png", "示例科技A Java后端"),
@@ -84,7 +88,8 @@ def main():
         games = sorted(set(re.findall(r"(\d+)\s*款", txt)))
         lines = sorted(set(re.findall(r"(\d{4,6})\s*行", txt)))
         nums = f"款{games} 行{lines}" if (games or lines) else "(无数字)"
-        ok_num = ("50" in games) and (not lines or "EXPECT_LINES" in lines)
+        ok_num = (not EXPECT_GAMES or EXPECT_GAMES in games) and \
+                 (not lines or (not EXPECT_LINES or EXPECT_LINES in lines))
         ok_sync = frac <= 0.002
         verdict = "✅ 可补发" if (ok_num and ok_sync) else "❌ 需重渲染"
         if not (ok_num and ok_sync):
