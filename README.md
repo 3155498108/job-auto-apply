@@ -26,6 +26,7 @@
 ```
 job-auto-apply/
 ├── install_skill.py                 ← 一键安装/校验 skill（标准库，无依赖）
+├── LICENSE                          ← MIT
 ├── skill/job-auto-apply/          ← 新写的 skill（BOSS + 51job 两平台版）
 │   ├── SKILL.md                       流程 / 输入 / 输出契约 / 失败处理 / Windows 适配
 │   └── references/
@@ -156,3 +157,11 @@ python install_skill.py
 - 项目规模类数字（接口数、数据量、响应时间、测试文件数）——只写实测出来的
 - 平台限制类数字（每日上限、滑动验证触发次数）——实测过再写，别抄博客
 - GitHub 仓库数 / commit 数——每次生成话术前重测，这两个数一直在涨
+
+---
+
+## License
+
+[MIT](LICENSE) · Copyright (c) 2026 候选人
+
+脚本与流程公开可自由使用、修改、再分发；**你自己的求职画像、简历、话术归档请不要提交进本仓库**。
