@@ -36,10 +36,17 @@ job-auto-apply/
     ├── SKILL.md                        上游原版 skill（v1，单平台）
     ├── references/                     上游文档，含 pitfalls.md（34 条实战坑位）
     ├── scripts/                        172 个脚本
-    ├── user_profile.json               求职画像（活数据，会被自动读取）
-    ├── greetings.json                  打招呼语模板（活数据）
+    ├── _template/                      配置模板（复制后填自己的信息）
+    │   ├── user_profile.example.json      求职画像模板
+    │   └── greetings.example.json         打招呼话术模板
+    ├── user_profile.json               求职画像（活数据，**不入库**，从模板复制）
+    ├── greetings.json                  打招呼语模板（活数据，**不入库**，从模板复制）
     └── boss_applied.json               已投记录
 ```
+
+> `marvis/user_profile.json` 与 `marvis/greetings.json` 承载**你的姓名、学校、届别与话术原文**，
+> 已加进 `.gitignore`，仓库里只留 `_template/` 下的空白模板。
+> 首次使用：复制模板 → 填自己的信息 → 脚本会自动读取。
 
 ## 来源与致谢
 

@@ -25,6 +25,10 @@ resume*.jpg
 jd-*.txt
 examples/
 
+# 个人求职画像与话术（每个人的都不一样，只入库模板）
+marvis/user_profile.json
+marvis/greetings.json
+
 # 编辑器
 .idea/
 .vscode/

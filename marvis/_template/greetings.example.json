@@ -1,0 +1,51 @@
+{
+  "_readme": "打招呼话术模板 —— 复制成 marvis/greetings.json 后按你自己的情况改。仓库里不放真实话术。",
+  "_comment": "打招呼话术库。full=完整版 / short=精简版 / tiny=极简版。代码按岗位标题/JD 关键词匹配 variant，再按输入框 maxlength 选档。",
+  "_note": "话术里出现的项目事实全部可被简历与投递记录验证，不含无法支撑的表述。",
+  "_format": "每条用 \\n 分段（BOSS 聊天框是 contenteditable，支持换行）；段内不再手工断行。",
+  "variants": {
+    "backend_java": {
+      "full": "您好，我是后端开发实习生。\n独立完成过 Spring Boot + MyBatis + MySQL + Redis 的电商交易后端全流程（表结构与索引设计、SQL 优化、Redis 缓存与分布式锁）。\n作为小组负责人做了 Spring AI + DeepSeek 的 AI 客服系统；日常用 Claude Code / Codex / Copilot 协作开发。\n可实习，时间可协商。方便发份详细 JD 吗？",
+      "short": "您好，我是后端开发实习生。\n独立完成过 Spring Boot + MyBatis + MySQL + Redis 的电商后端全流程，作为小组负责人做过 Spring AI + DeepSeek 的 AI 客服系统。\n可实习，时间可协商，方便发份 JD 吗？",
+      "tiny": "您好，我是后端开发实习生，独立完成过 Spring Boot + MySQL + Redis 的电商后端全流程，作为小组负责人做过 Spring AI 的 AI 客服系统。\n可实习，时间可协商，方便发份 JD 吗？"
+    },
+    "ai_agent": {
+      "full": "您好，我是后端开发实习生，我的项目全部在 Claude Code / Codex / Copilot 协作下完成。\n做过某网页小游戏合集（TypeScript + Vitest），让 AI 作为决策 Agent 与规则共用同一个 reducer。\n也作为小组负责人做了 Spring AI + DeepSeek 的 AI 客服系统（异步调用 + 30 秒超时，单次响应 1–3 秒）。\nGitHub 上有若干个公开仓库。可实习，时间可协商，可提前到岗。",
+      "short": "您好，我是后端开发实习生，项目全部用 Claude Code / Codex / Copilot 协作完成。\n做过某网页小游戏合集（AI 作为决策 Agent 共用同一 reducer）和 Spring AI + DeepSeek 的 AI 客服系统。\n可实习，时间可协商，方便发份 JD 吗？",
+      "tiny": "您好，我是后端开发实习生，做过某网页小游戏合集（AI 作为决策 Agent）与 Spring AI + DeepSeek 的 AI 客服系统。\n可实习，时间可协商，方便发份 JD 吗？"
+    },
+    "fullstack": {
+      "full": "您好，我是后端开发实习生。\nJava 后端（Spring Boot + MyBatis + MySQL + Redis）与前端（HTML/CSS/JavaScript、TypeScript + Vite）双栈。\n做过电商交易后端全流程、某网页小游戏合集与 Flask 服务端；作为小组负责人做了 Spring AI + DeepSeek 的 AI 客服系统。\nGitHub 上有若干个公开仓库。可实习，时间可协商。",
+      "short": "您好，我是后端开发实习生，Java 后端（Spring Boot + MyBatis + MySQL + Redis）与前端（TypeScript + Vite）双栈。\n做过电商后端全流程与某网页小游戏合集。\n可实习，时间可协商，方便发份 JD 吗？",
+      "tiny": "您好，我是后端开发实习生，Java 后端（Spring Boot + MySQL + Redis）与前端（TypeScript）双栈，做过电商后端全流程与某网页小游戏合集。\n可实习，时间可协商，方便发份 JD 吗？"
+    },
+    "bigdata": {
+      "full": "您好，我是后端开发实习生。\n做过 Hadoop HDFS + Hive 的轨迹大数据分析（万级原始数据清洗为数千条，输出 8 项分析指标），负责 Flask 后端与 ECharts 可视化大屏。\nJava 侧独立完成过 Spring Boot + MySQL + Redis 的电商后端全流程。\nGitHub 上有若干个公开仓库。可实习，时间可协商。",
+      "short": "您好，我是后端开发实习生。\n做过 Hadoop HDFS + Hive 的轨迹大数据分析与 Flask + ECharts 可视化大屏。\nJava 侧独立完成过 Spring Boot + MySQL + Redis 的电商后端。可实习，时间可协商，方便发份 JD 吗？",
+      "tiny": "您好，我是后端开发实习生，做过 Hadoop + Hive 的轨迹大数据分析与 Flask + ECharts 大屏，Java 侧独立完成过 Spring Boot + MySQL 电商后端。\n可实习，时间可协商，方便发份 JD 吗？"
+    },
+    "default": {
+      "full": "您好，我是后端开发实习生。\n具备 Java 后端（Spring Boot + MyBatis + MySQL + Redis）与 Python / TypeScript 工程双栈能力，独立完成过电商交易后端全流程。\n作为小组负责人做过 Spring AI + DeepSeek 的 AI 客服系统，项目全部在 Claude Code / Codex / Copilot 协作下完成。\nGitHub 上有若干个公开仓库。可实习，时间可协商，可提前到岗。方便发份详细 JD 吗？",
+      "short": "您好，我是后端开发实习生，Java 后端与 Python / TypeScript 双栈。\n独立完成过 Spring Boot + MySQL + Redis 的电商后端，作为小组负责人做过 Spring AI 的 AI 客服系统。\n可实习，时间可协商，方便发份 JD 吗？",
+      "tiny": "您好，我是后端开发实习生，Java 后端（Spring Boot + MySQL + Redis）与 Python / TypeScript 双栈。\n可实习，时间可协商，方便发份 JD 吗？"
+    }
+  },
+  "match_rules": [
+    {
+      "variant": "ai_agent",
+      "keywords": ["AI", "ai", "智能体", "Agent", "agent", "大模型", "LLM", "llm", "人工智能", "AIGC", "算法工程", "机器学习", "Prompt", "Copilot", "Codex", "Claude", "Trae", "GPT", "RAG"]
+    },
+    {
+      "variant": "fullstack",
+      "keywords": ["全栈", "Full Stack", "FullStack", "前端", "Node.js", "TypeScript", "Javascript", "JavaScript", "web", "Web"]
+    },
+    {
+      "variant": "bigdata",
+      "keywords": ["大数据", "Hadoop", "Hive", "Spark", "Flink", "数据仓库", "ETL", "数据开发", "数仓", "推荐算法", "数据挖掘"]
+    },
+    {
+      "variant": "backend_java",
+      "keywords": ["Java", "java", "后端", "服务端", "Spring", "spring", "JVM", "MySQL", "Redis", "微服务", "Go", "Golang", "PHP"]
+    }
+  ]
+}

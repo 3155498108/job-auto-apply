@@ -13,26 +13,26 @@ RECRUIT = r"YOUR_HOME\招聘"
 WORK = r"YOUR_HOME\output\boss_work"
 
 # ── 三套基础正文 ──────────────────────────────────────────────
-T_JAVA = """您好，我是计算机 本科生候选人。
-**【Java 后端】**独立完成「某电商交易后端」电商后端全流程：Spring Boot + MyBatis + MySQL + Redis，18 个 Controller / 70 个 RESTful 接口，11 张业务表自己设计，SQL 走索引、全部用 #{} 占位防注入。
+T_JAVA = """您好，我是后端开发实习生。
+**【Java 后端】**独立完成某电商交易后端全流程：Spring Boot + MyBatis + MySQL + Redis，18 个 Controller / 70 个 RESTful 接口，11 张业务表自己设计，SQL 走索引、全部用 #{} 占位防注入。
 **【工程实践】**用 MyBatis 拦截器统一分页与字段脱敏；Redis 缓存菜品与令牌、Session 共享登录态，分布式锁防超卖。
 **【AI 协作】**日常用 Claude Code / Codex 协作开发，AI 生成的代码我自己审、问题主动跟进。
-每周可实习 5 天，时间可协商。方便发份 JD 吗？"""
+可实习，时间可协商。方便发份 JD 吗？"""
 
-T_AI = """您好，我是计算机 本科生候选人，日常用 Claude Code / Codex / Copilot 做 AI Coding。
-**【AI 落地】**小组负责人做 Spring AI + DeepSeek 某 AI 客服：接入大模型 API 做成 5 个 RESTful 端点，异步调用 + 30 秒超时 + 异常隔离，单次 AI 响应 1–3 秒、数据库写入 < 50 毫秒。
+T_AI = """您好，我是后端开发实习生，日常用 Claude Code / Codex / Copilot 做 AI Coding。
+**【AI 落地】**小组负责人做 Spring AI + DeepSeek 的 AI 客服系统：接入大模型 API 做成 5 个 RESTful 端点，异步调用 + 30 秒超时 + 异常隔离，单次 AI 响应 1–3 秒、数据库写入 < 50 毫秒。
 **【Agent 实践】**某网页小游戏合集里让 AI 与规则共用纯函数 reducer，AI 只做候选试算、不维护第二套逻辑；代码我自己审，每款配 Vitest 单测。
 **【边界感】**模型训练与调优我没做过，做的是把大模型接进业务并处理它的慢与不稳，不夸大。
-每周可实习 5 天，时间可协商。方便发份 JD 吗？"""
+可实习，时间可协商。方便发份 JD 吗？"""
 
-T_FULL = """您好，我是计算机 本科生候选人。
+T_FULL = """您好，我是后端开发实习生。
 **【前端/TS】**用 TypeScript + Canvas 做了 某网页小游戏合集，三层架构（站点壳 / 游戏内核 / 渲染层），内核 两百余个 TS 文件、纯函数 reducer 状态机，每款配 Vitest 单测（数十个测试文件）。
 **【后端】**独立完成「某电商交易后端」Java 后端 Spring Boot + MyBatis + MySQL + Redis，18 个 Controller / 70 个 RESTful 接口；另有 Flask + JavaScript 前后端闭环并本地部署。
 **【AI 协作】**日常用 Claude Code / Codex 协作开发，AI 只做候选试算，规则始终是唯一真相源。
-每周可实习 5 天，时间可协商。方便发份 JD 吗？"""
+可实习，时间可协商。方便发份 JD 吗？"""
 
 # 首行 = 公司 · 岗位（供 _company_aliases 提取公司名）
-HEAD = "您好，我是计算机 本科生候选人，看到贵司「{pos}」的岗位。"
+HEAD = "您好，我是后端开发实习生，看到贵司「{pos}」的岗位。"
 
 IMGS_GENERIC = [r"研发实习生\shot_全量版_p1.png", r"研发实习生\shot_全量版_p2.png"]
 IMGS_AICODE = [r"AI Coding全栈工程师\shot_aicoding_p1.png", r"AI Coding全栈工程师\shot_aicoding_p2.png"]
@@ -71,10 +71,10 @@ JOBS = [
      "江门", "示例企业16", "软件开发实习生", "T_FULL", IMGS_GENERIC),
 ]
 
-SHORT = """您好，我是计算机专业 本科生候选人，{tag}
+SHORT = """您好，我是后端开发实习生，{tag}
 某网页小游戏合集里让 AI 与规则共用纯函数 reducer，AI 只做候选试算，代码我自己审、每款配 Vitest 单测。
-独立完成「某电商交易后端」Java 后端 Spring Boot + MySQL + Redis（18 个 Controller / 70 个 RESTful 接口）；另有 Spring AI + DeepSeek 某 AI 客服。
-GitHub 若干个公开仓库、多次提交。可实习，时间可协商。方便发份 JD 吗？"""
+独立完成「某电商交易后端」Java 后端 Spring Boot + MySQL + Redis（18 个 Controller / 70 个 RESTful 接口）；另有 Spring AI + DeepSeek 的 AI 客服系统。
+GitHub 上若干个公开仓库、多次提交。可实习，时间可协商。方便发份 JD 吗？"""
 
 SHORT_TAG = {
     "T_JAVA": "主攻 Java 后端方向。",

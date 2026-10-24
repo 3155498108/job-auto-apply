@@ -5,9 +5,9 @@ import io
 
 FILES = [
     (r"YOUR_HOME\招聘\AI应用与Agent工程实习生\新建 文本文档.txt",
-     [("GitHub 8 仓库，可实习", "GitHub 若干个公开仓库、多次提交，可实习")]),
+     [("GitHub 8 仓库，可实习", "GitHub 上若干个公开仓库、多次提交，可实习")]),
     (r"YOUR_HOME\招聘\示例科技A-后端JAVA开发实习生\新建 文本文档.txt",
-     [("GitHub 公开 8 仓库、50+ commit 可翻源码", "GitHub 公开 若干个公开仓库、多次提交可翻源码"),
+     [("GitHub 公开 若干仓库、数十次提交 可翻源码", "GitHub 公开 若干个公开仓库、多次提交可翻源码"),
       ("GitHub 公开 8 仓库、2026 年内 50+ commit", "GitHub 公开 若干个公开仓库、2026 年内 多次提交")]),
 ]
 
