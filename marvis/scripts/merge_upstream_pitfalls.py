@@ -15,9 +15,12 @@
 本脚本只做两件事：插入新章节 + 把后续章节号顺延。
 """
 import io
+import os
 import re
 
-P = r"YOUR_HOME\.minimax\skills\job-auto-apply\references\safety-checklist.md"
+P = os.environ.get(
+    "SAFETY_CHECKLIST",
+    r"YOUR_HOME\.minimax\skills\job-auto-apply\references\safety-checklist.md")
 
 NEW = """## 三、继承自上游踩坑记录的六条硬规则
 

@@ -2,9 +2,12 @@
 # -*- coding: utf-8 -*-
 """fix_section_numbers.py — 修掉 merge_upstream_pitfalls.py 留下的错误章节号。"""
 import io
+import os
 import re
 
-P = r"YOUR_HOME\.minimax\skills\job-auto-apply\references\safety-checklist.md"
+P = os.environ.get(
+    "SAFETY_CHECKLIST",
+    r"YOUR_HOME\.minimax\skills\job-auto-apply\references\safety-checklist.md")
 
 s = io.open(P, encoding="utf-8").read()
 before = s
