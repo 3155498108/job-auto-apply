@@ -77,8 +77,13 @@ ALGO_OK_CTX = ["ai应用", "ai 应用", "agent", "智能体", "llm", "aigc",
 # 明显是社招（要求 1 年以上经验）
 SOCIAL = ["社招", "1-3年", "1-3 年", "3-5年", "3-5 年", "经验不限"]
 
-# 届别：本人是 在校，只投明确面向 27 届或不限届的岗位
-OTHER_GRADE = ["25届", "26届", "28届", "25 届", "26 届", "28 届", "25年", "26年", "28年"]
+# 届别：只投面向本人届别或不限届的岗位。
+# 本人届别由环境变量 GRADE_OK 提供（例：GRADE_OK=2026）；不设置则不做届别筛除。
+GRADE = os.environ.get("GRADE_OK", "").strip()
+OTHER_GRADE = [g for g in ("25", "26", "28")
+               if not GRADE or g != GRADE[2:]]
+OTHER_GRADE = ([f"{g}届" for g in OTHER_GRADE] + [f"{g} 届" for g in OTHER_GRADE] +
+               [f"{g}年" for g in OTHER_GRADE])
 
 # 纯前端（本人主方向是后端 / AI）
 FRONT_ONLY = ["前端", "web前端", "web 前端", "html", "react", "vue3", "vue工程师"]
@@ -116,7 +121,7 @@ PER_CITY_OTHER = 1
 
 
 def score(j, tpl):
-    """给候选打分：实习岗 + 薪资高 + 方向对口 + 在校优先。"""
+    """给候选打分：实习岗 + 薪资高 + 方向对口 + 届别对口。"""
     s = 0
     title = (j.get("title") or "")
     low = title.lower()
@@ -124,7 +129,7 @@ def score(j, tpl):
         s += 30
     if "实习" in title:
         s += 20
-    if any(k in low for k in ("应届", "毕业")):
+    if any(k in low for k in ("应届", "毕业")) or (GRADE and GRADE in low):
         s += 5
     # 技术方向权重
     s += {"T_JAVA": 20, "T_AI": 22, "T_AICODE": 22, "T_FULL": 18,
@@ -207,7 +212,7 @@ def main():
             skipped.append((comp, title, "社招非实习"))
             continue
         if any(g in title for g in OTHER_GRADE):
-            skipped.append((comp, title, "届别不符（本人在校）"))
+            skipped.append((comp, title, "届别不符"))
             continue
         # 纯前端岗位排除；含「全栈」等组合词的不算纯前端
         if any(f in low for f in FRONT_ONLY) and "全栈" not in title and "前后端" not in title:

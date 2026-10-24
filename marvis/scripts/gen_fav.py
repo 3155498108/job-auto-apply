@@ -107,7 +107,7 @@ PICK = {
     "JOBID042": ("示例互动H-java开发实习生-深圳", "T_JAVA", IMGS_GENERIC),
     "JOBID001": ("示例科技U-软件开发工程师实习-江门", "T_JAVA", IMGS_GENERIC),
     "JOBID002": ("示例科技X-python实习生-佛山", "T_PY", IMGS_GENERIC),
-    "JOBID106": ("示例科技AE-全栈java+vue开发实习生", "T_FULL", IMGS_GENERIC),
+    "JOBID152": ("示例科技AE-全栈java+vue开发实习生", "T_FULL", IMGS_GENERIC),
     "a47ed6c93b58c03203173ti-EFpQ": ("示例企业26-AI全栈开发实习生", "T_AICODE", IMGS_AICODE),
     "JOBID011": ("示例企业41-软件开发实习生", "T_JAVA", IMGS_GENERIC),
     "JOBID043": ("示例科技AM-AiJava开发实习生-东莞", "T_AI", IMGS_GENERIC),

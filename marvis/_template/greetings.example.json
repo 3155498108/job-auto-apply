@@ -1,33 +1,34 @@
 {
   "_readme": "打招呼话术模板 —— 复制成 marvis/greetings.json 后按你自己的情况改。仓库里不放真实话术。",
   "_comment": "打招呼话术库。full=完整版 / short=精简版 / tiny=极简版。代码按岗位标题/JD 关键词匹配 variant，再按输入框 maxlength 选档。",
-  "_note": "话术里出现的项目事实全部可被简历与投递记录验证，不含无法支撑的表述。",
+  "_note": "话术里出现的项目事实必须能被简历与投递记录验证，不含无法支撑的表述。",
   "_format": "每条用 \\n 分段（BOSS 聊天框是 contenteditable，支持换行）；段内不再手工断行。",
+  "_howto": "下面每个 variant 的三档都是占位文本，把 [] 里的部分换成你自己的真实内容。full 约 150-250 字，short 约 80-140 字，tiny 约 40-70 字；输入框有 maxlength 时脚本会自动选短的那档。",
   "variants": {
     "backend_java": {
-      "full": "您好，我是后端开发实习生。\n独立完成过 Spring Boot + MyBatis + MySQL + Redis 的电商交易后端全流程（表结构与索引设计、SQL 优化、Redis 缓存与分布式锁）。\n作为小组负责人做了 Spring AI + DeepSeek 的 AI 客服系统；日常用 Claude Code / Codex / Copilot 协作开发。\n可实习，时间可协商。方便发份详细 JD 吗？",
-      "short": "您好，我是后端开发实习生。\n独立完成过 Spring Boot + MyBatis + MySQL + Redis 的电商后端全流程，作为小组负责人做过 Spring AI + DeepSeek 的 AI 客服系统。\n可实习，时间可协商，方便发份 JD 吗？",
-      "tiny": "您好，我是后端开发实习生，独立完成过 Spring Boot + MySQL + Redis 的电商后端全流程，作为小组负责人做过 Spring AI 的 AI 客服系统。\n可实习，时间可协商，方便发份 JD 吗？"
+      "full": "您好，我是[你的身份，如：后端开发实习生]。\n[你做过的后端项目 + 技术栈 + 一两个可核实的数字]\n[另一段：AI/工程化方面的项目或日常开发方式]\n[可投入时间 + 收尾请求，如：方便发份详细 JD 吗？]",
+      "short": "您好，我是[你的身份]。\n[后端项目 + 技术栈 + 一个数字]\n[可投入时间，方便发份 JD 吗？]",
+      "tiny": "您好，我是[你的身份]，做过[项目 + 技术栈]，可实习，方便发份 JD 吗？"
     },
     "ai_agent": {
-      "full": "您好，我是后端开发实习生，我的项目全部在 Claude Code / Codex / Copilot 协作下完成。\n做过某网页小游戏合集（TypeScript + Vitest），让 AI 作为决策 Agent 与规则共用同一个 reducer。\n也作为小组负责人做了 Spring AI + DeepSeek 的 AI 客服系统（异步调用 + 30 秒超时，单次响应 1–3 秒）。\nGitHub 上有若干个公开仓库。可实习，时间可协商，可提前到岗。",
-      "short": "您好，我是后端开发实习生，项目全部用 Claude Code / Codex / Copilot 协作完成。\n做过某网页小游戏合集（AI 作为决策 Agent 共用同一 reducer）和 Spring AI + DeepSeek 的 AI 客服系统。\n可实习，时间可协商，方便发份 JD 吗？",
-      "tiny": "您好，我是后端开发实习生，做过某网页小游戏合集（AI 作为决策 Agent）与 Spring AI + DeepSeek 的 AI 客服系统。\n可实习，时间可协商，方便发份 JD 吗？"
+      "full": "您好，我是[你的身份]，我的项目主要在[AI 编程工具]协作下完成。\n[AI/Agent 方向项目：做了什么、怎么做的]\n[工程化方向的另一个项目]\n[可投入时间 + 收尾请求]",
+      "short": "您好，我是[你的身份]，项目全部用[AI 编程工具]协作完成。\n[AI 方向项目要点]\n[可投入时间，方便发份 JD 吗？]",
+      "tiny": "您好，我是[你的身份]，做过[AI 方向项目]，可实习，方便发份 JD 吗？"
     },
     "fullstack": {
-      "full": "您好，我是后端开发实习生。\nJava 后端（Spring Boot + MyBatis + MySQL + Redis）与前端（HTML/CSS/JavaScript、TypeScript + Vite）双栈。\n做过电商交易后端全流程、某网页小游戏合集与 Flask 服务端；作为小组负责人做了 Spring AI + DeepSeek 的 AI 客服系统。\nGitHub 上有若干个公开仓库。可实习，时间可协商。",
-      "short": "您好，我是后端开发实习生，Java 后端（Spring Boot + MyBatis + MySQL + Redis）与前端（TypeScript + Vite）双栈。\n做过电商后端全流程与某网页小游戏合集。\n可实习，时间可协商，方便发份 JD 吗？",
-      "tiny": "您好，我是后端开发实习生，Java 后端（Spring Boot + MySQL + Redis）与前端（TypeScript）双栈，做过电商后端全流程与某网页小游戏合集。\n可实习，时间可协商，方便发份 JD 吗？"
+      "full": "您好，我是[你的身份]。\n[后端栈：语言 + 框架 + 中间件]\n[前端栈：语言 + 框架]\n[做过的项目清单]\n[可投入时间 + 收尾请求]",
+      "short": "您好，我是[你的身份]，[后端栈]与[前端栈]双栈。\n[做过的项目]\n[可投入时间，方便发份 JD 吗？]",
+      "tiny": "您好，我是[你的身份]，[后端栈]与[前端栈]双栈，可实习，方便发份 JD 吗？"
     },
     "bigdata": {
-      "full": "您好，我是后端开发实习生。\n做过 Hadoop HDFS + Hive 的轨迹大数据分析（万级原始数据清洗为数千条，输出 8 项分析指标），负责 Flask 后端与 ECharts 可视化大屏。\nJava 侧独立完成过 Spring Boot + MySQL + Redis 的电商后端全流程。\nGitHub 上有若干个公开仓库。可实习，时间可协商。",
-      "short": "您好，我是后端开发实习生。\n做过 Hadoop HDFS + Hive 的轨迹大数据分析与 Flask + ECharts 可视化大屏。\nJava 侧独立完成过 Spring Boot + MySQL + Redis 的电商后端。可实习，时间可协商，方便发份 JD 吗？",
-      "tiny": "您好，我是后端开发实习生，做过 Hadoop + Hive 的轨迹大数据分析与 Flask + ECharts 大屏，Java 侧独立完成过 Spring Boot + MySQL 电商后端。\n可实习，时间可协商，方便发份 JD 吗？"
+      "full": "您好，我是[你的身份]。\n[大数据项目：技术栈 + 数据量 + 产出的指标]\n[可视化/服务端的角色]\n[可投入时间 + 收尾请求]",
+      "short": "您好，我是[你的身份]。\n[大数据项目 + 技术栈]\n[可投入时间，方便发份 JD 吗？]",
+      "tiny": "您好，我是[你的身份]，做过[大数据项目]，可实习，方便发份 JD 吗？"
     },
     "default": {
-      "full": "您好，我是后端开发实习生。\n具备 Java 后端（Spring Boot + MyBatis + MySQL + Redis）与 Python / TypeScript 工程双栈能力，独立完成过电商交易后端全流程。\n作为小组负责人做过 Spring AI + DeepSeek 的 AI 客服系统，项目全部在 Claude Code / Codex / Copilot 协作下完成。\nGitHub 上有若干个公开仓库。可实习，时间可协商，可提前到岗。方便发份详细 JD 吗？",
-      "short": "您好，我是后端开发实习生，Java 后端与 Python / TypeScript 双栈。\n独立完成过 Spring Boot + MySQL + Redis 的电商后端，作为小组负责人做过 Spring AI 的 AI 客服系统。\n可实习，时间可协商，方便发份 JD 吗？",
-      "tiny": "您好，我是后端开发实习生，Java 后端（Spring Boot + MySQL + Redis）与 Python / TypeScript 双栈。\n可实习，时间可协商，方便发份 JD 吗？"
+      "full": "您好，我是[你的身份]。\n[你的技术栈与最强的一条项目事实]\n[第二条项目事实]\n[可投入时间 + 收尾请求]",
+      "short": "您好，我是[你的身份]，[技术栈]。\n[一条项目事实]\n[可投入时间，方便发份 JD 吗？]",
+      "tiny": "您好，我是[你的身份]，[技术栈]，可实习，方便发份 JD 吗？"
     }
   },
   "match_rules": [
