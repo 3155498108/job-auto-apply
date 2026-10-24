@@ -49,7 +49,7 @@ SHOTS = {
                  must="候选人D女士示例科技C", role="见习全栈"),
     "示例科技D": dict(shots=[r"示例科技D-游戏开发实习生\shot_示例15_p1.png"],
                    must="候选人H女士示例科技D", role="游戏开发"),
-    "示例企业13": dict(shots=[r"后端开发实习生\shot_示例17_p1.png"],
+    "示例企业68": dict(shots=[r"后端开发实习生\shot_示例17_p1.png"],
                    must="候选人D女士示例网络E", role="后端开发"),
     "示例数据科技": dict(shots=[r"研发实习生\shot_示例20_p1.png"],
                        must="候选人N先生示例数据科技", role="应届生/实习生"),
