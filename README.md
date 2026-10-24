@@ -13,7 +13,11 @@
 猎聘 / 智联 / 58 / 牛客**没有适配器**，接它们属于扩展开发（见
 `skill/job-auto-apply/references/platform-adapters.md`），不是开箱即用。
 
-> 公开仓库。脚本与流程公开，个人求职画像、简历、话术归档**不在本仓库内**。
+> 公开仓库。脚本与流程公开；个人求职画像、简历成品、话术归档**不在本仓库内**，
+> 但作者本人信息与可核实的技术底子见下一节。
+
+---
+
 
 ---
 
@@ -34,7 +38,7 @@ job-auto-apply/
 └── marvis/                          ← 自动化脚本工程（上游基座 + 本地演进）
     ├── SKILL.md                        上游原版 skill（v1，单平台）
     ├── references/                     上游文档，含 pitfalls.md（34 条实战坑位）
-    ├── scripts/                        164 个脚本
+    ├── scripts/                        172 个脚本
     ├── user_profile.json               求职画像（活数据，会被自动读取）
     ├── greetings.json                  打招呼语模板（活数据）
     └── boss_applied.json               已投记录
@@ -59,7 +63,7 @@ job-auto-apply/
 | `scripts/wb_cross.py` / `wb_fav_check.py` | 通用投递链路 + 送达核对（清单与前缀走环境变量） |
 | `scripts/wb_deliver_batch.py` | 按 `final.json` 批量投递（岗位名/公司名双校验 + 简历图上传 + 逐个核对） |
 | `scripts/wb_verify_batch.py` | 独立复核：重开消息页逐个点开会话重数话术条数与简历图张数 |
-| `scripts/wb_resend.py` | 第二次触达：给「已投但对方未读」的会话补发（四道闸 + 断点续跑 + 登录态守卫） |
+| `scripts/wb_resend.py` | 第二次触达：给「已投但对方未读」的会话补发（五道闸 + 断点续跑 + 登录态守卫） |
 | `scripts/wb_conv_states.py` | 会话状态全量收集（虚拟滚动：`.user-list-content` + 派发 scroll 事件） |
 | `scripts/match_unread.py` / `gen_resend.py` | 未读候选筛选（含投递天数分层）+ 第二次触达话术生成 |
 | `scripts/scan_gd.py` / `gen_gd.py` / `gen_gd2.py` | 按城市扫描与选岗 |
@@ -70,7 +74,7 @@ job-auto-apply/
 
 ## 安装 skill
 
-skill 就是本仓库的 `skill/job-auto-apply/` 目录。装到智能体的 skills 目录下才会被加载。
+skill 就是本仓库的 `skill/job-auto-apply/` 目录。装到**你的 agent 的 skills 目录**下才会被加载。
 
 **一条命令搞定**（自动检测本机装了哪些 agent、只下载 skill 本体、校验 frontmatter）：
 
@@ -83,7 +87,7 @@ python install_skill.py
 | `python install_skill.py` | 从 GitHub 装到检测到的 agent |
 | `python install_skill.py --list` | 只看检测到什么、装了什么 |
 | `python install_skill.py --check` | 校验已装版本是否与 GitHub 一致 |
-| `python install_skill.py --target claude` | 指定 agent（`minimax` / `claude` / `codex` / `all`） |
+| `python install_skill.py --target <agent>` | 指定 agent（`minimax` / `claude` / `codex` / `cursor` / `all`） |
 | `python install_skill.py --from <本地 clone 目录>` | 离线安装 |
 
 装完**重新打开 agent 会话**让 skill 生效，然后让它跑一次环境自检：
@@ -92,13 +96,19 @@ python install_skill.py
 & "$env:USERPROFILE\.kimi-webbridge\bin\kimi-webbridge.exe" status
 ```
 
-手动装也可以：把 `skill/job-auto-apply/` 整个目录复制到
+**手动装**：把 `skill/job-auto-apply/` 整个目录复制到你的 agent 的 skills 目录下，
+目录名必须是 `job-auto-apply`（目录名 = skill 名）：
 
-```
-YOUR_HOME\.minimax\skills\job-auto-apply\
-```
+| agent | skills 目录（`~` = 用户主目录） |
+|---|---|
+| MiniMax Code | `~/.minimax/skills/job-auto-apply/` |
+| Claude Code | `~/.claude/skills/job-auto-apply/` |
+| Codex | `~/.codex/skills/job-auto-apply/` |
+| Cursor | `~/.cursor/skills/job-auto-apply/` |
 
-（`~/.claude/skills/` / `~/.codex/skills/` 同理）
+> Windows 下 `~` 就是 `C:\Users\<你的用户名>`。
+> 例如 `C:\Users\<你的用户名>\.claude\skills\job-auto-apply\`。
+> 装完可以用 `python install_skill.py --check` 校验版本是否一致。
 
 装完用自然语言触发，例如「BOSS 这批投递核对一下」「前程无忧也投一批」
 「话术别一套模板」「第一次用，先做环境自检」。
@@ -107,9 +117,9 @@ YOUR_HOME\.minimax\skills\job-auto-apply\
 
 1. **Chrome/Edge 浏览器 + Kimi WebBridge 扩展**（浏览器操控全部走 WebBridge，不用 Selenium/Playwright）
 2. **提前在浏览器里手动登录**目标平台的账号
-3. Python 3.14（本机 `python` 即是）
-4. 简历与归档目录 `YOUR_HOME\`（简历 PDF、截图、话术三件套、`投递记录.md`）
-   —— **不在本仓库内**，属个人材料
+3. Python 3.x（本机 `python` 即是）
+4. 自己的求职材料目录（简历 PDF、简历截图、话术归档、`投递记录.md`、`boss_manifest.json`）
+   —— **不在本仓库内**，属个人材料。目录结构见 `skill/job-auto-apply/references/onboarding.md` 第三节
 
 ## 安全阀（投递是对外可见、不可撤回的操作）
 
@@ -141,10 +151,8 @@ YOUR_HOME\.minimax\skills\job-auto-apply\
 ## 事实纪律
 
 话术与画像里的每个数字都要能核实。会变的数据（GitHub 仓库数 / commit 数等）
-用 `scripts/gh_count.py` 重新实测，不要沿用旧值。当前基准：
+用 `scripts/gh_count.py` 重新实测，不要沿用旧值。写进话术前先跑一遍对照：
 
-- 某网页小游戏合集（目录数与清单条数双向差集为空，双向差集为空）
-- 两百余个 TS 文件 / 数万行 / 数十个 Vitest 测试文件（`count_lines.py` 实测）
-- 某电商交易后端：18 个 Controller / 70 个 RESTful 接口 / 11 张业务表
-- 某 AI 客服：5 个 RESTful 端点 / CompletableFuture 异步 + 30 秒超时 / 异常隔离 / 1–3 秒 / < 50 毫秒
-- GitHub：若干个公开仓库 / 多次提交（`gh_count.py` 实测，非 fork 仓库）
+- 项目规模类数字（接口数、数据量、响应时间、测试文件数）——只写实测出来的
+- 平台限制类数字（每日上限、滑动验证触发次数）——实测过再写，别抄博客
+- GitHub 仓库数 / commit 数——每次生成话术前重测，这两个数一直在涨

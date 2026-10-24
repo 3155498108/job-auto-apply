@@ -197,7 +197,8 @@ python marvis\scripts\env_check.py
 - 简历与归档：`YOUR_HOME\`（`招聘\<岗位>\` 存 PDF/截图/话术三件套，
   `output\投递记录.md` 是总记录，`招聘\boss_manifest.json` 是机器可读清单）
 - 自动化工程：`YOUR_REPO\marvis\scripts\`（BOSS 全链路已跑通，
-  累计 **176 条 manifest 记录 / 167 个唯一 jobId** 幂等清单，164 个脚本）。
+  累计 **176 条 manifest 记录 / 167 个唯一 jobId** 幂等清单，该目录 302 个脚本；
+  仓库内副本 `job-auto-apply\marvis\scripts\` 172 个）。
   该目录的基座来自公开仓库
   `taohuajianxian/boss-zhipin-assistant`，其 34 条实战坑位记录已收进
   `references/upstream-pitfalls.md`，其中 6 条已提炼进 `references/safety-checklist.md`。
