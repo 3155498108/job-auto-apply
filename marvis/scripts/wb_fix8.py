@@ -42,21 +42,21 @@ BAD = ["说明：", "说明:", "不要改", "不要再改", "归档", "内部", 
 #   role: 头部岗位名里必须包含的片段（防发错岗位）
 SHOTS = {
     "示例科技Y": dict(shots=[r"示例科技A-后端JAVA开发实习生\shot_示例20_p1.png"],
-                 must="候选人D女士示例科技Y", role="JAVA开发工程师"),
+                 must="候选人F女士示例科技Y", role="JAVA开发工程师"),
     "示例文化B": dict(shots=[r"后端开发实习生\shot_示例17_p1.png"],
                      must="候选人G先生示例文化B", role="AI应用与Agent"),
     "示例企业74": dict(shots=[r"全栈开发实习生\shot_示例12_p1.png"],
-                 must="候选人B女士示例科技C", role="见习全栈"),
+                 must="候选人D女士示例科技C", role="见习全栈"),
     "示例科技D": dict(shots=[r"示例科技D-游戏开发实习生\shot_示例15_p1.png"],
                    must="候选人H女士示例科技D", role="游戏开发"),
     "示例企业13": dict(shots=[r"后端开发实习生\shot_示例17_p1.png"],
-                   must="候选人B女士示例网络E", role="后端开发"),
+                   must="候选人D女士示例网络E", role="后端开发"),
     "示例数据科技": dict(shots=[r"研发实习生\shot_示例20_p1.png"],
                        must="候选人N先生示例数据科技", role="应届生/实习生"),
     "示例软件F": dict(shots=[r"软件实习生\shot_示例19_p1.png"],
                      must="候选人O广州示例软件F", role="软件开发"),
     "示例云服务G": dict(shots=[r"示例云服务G-AI全栈开发工程师\shot_示例11_p1.png"],
-                   must="候选人C女士广州示例云服务G", role="AI"),
+                   must="候选人E女士广州示例云服务G", role="AI"),
 }
 
 SNAP = r"""JSON.stringify((function(){
